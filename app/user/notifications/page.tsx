@@ -1,5 +1,5 @@
 
-function UserPage() {
+function NotificationsPage() {
     return (
         <div>
             User page
@@ -7,4 +7,4 @@ function UserPage() {
     );
 }
 
-export default UserPage;
+export default NotificationsPage;
