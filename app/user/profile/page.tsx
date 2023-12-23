@@ -18,7 +18,7 @@ function ProfilePage() {
               </aside>
               <div className="flex-1 lg:max-w-2xl">
 
-                //TODO: Add form here
+                  {/*TODO: Add form here*/}
 
               </div>
             </div>
