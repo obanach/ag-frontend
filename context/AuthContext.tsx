@@ -66,13 +66,14 @@ const AuthProvider = ({ children }: Props) => {
 
     const handleLogout = () => {
         setUser(null)
-        window.localStorage.removeItem(authConfig.storageTokenName)
+        window.localStorage.removeItem(authConfig.cookies.token)
         router.push('/auth/login')
     }
 
     const values = {
         user,
         token,
+        loading,
         login: handleLogin,
         logout: handleLogout,
         fetchUser: handleFetchUser
