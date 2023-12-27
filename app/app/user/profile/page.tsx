@@ -1,6 +1,6 @@
 import Image from "next/image"
 import {Separator} from "@/components/ui/separator";
-import {SidebarNav} from "@/app/user/components/sidebar-nav";
+import {SidebarNav} from "@/app/app/user/components/sidebar-nav";
 function ProfilePage() {
     return (
         <>

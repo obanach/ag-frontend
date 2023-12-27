@@ -1,10 +1,10 @@
 "use client"
 import {PageHeader, PageHeaderDescription, PageHeaderHeading} from "@/components/page-header";
 import {Button} from "@/components/ui/button";
-import {FanSwitch} from "@/app/hub/components/fan-switch";
-import {LightSwitch} from "@/app/hub/components/light-switch";
+import {FanSwitch} from "@/app/app/hub/components/fan-switch";
+import {LightSwitch} from "@/app/app/hub/components/light-switch";
 import {ChevronLeft} from "lucide-react";
-import {Environment} from "@/app/hub/components/module/environment";
+import {Environment} from "@/app/app/hub/components/module/environment";
 import {
     NavigationMenu, NavigationMenuContent,
     NavigationMenuItem, NavigationMenuLink,

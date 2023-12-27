@@ -22,12 +22,7 @@ function RootLayout({ children}: RootLayoutProps) {
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-            <div className="relative flex min-h-screen flex-col">
-              <SiteHeader />
-                <div className="container relative mt-5">
-                    {children}
-                </div>
-            </div>
+            {children}
         </ThemeProvider>
       </body>
     </html>
