@@ -6,6 +6,7 @@ export const authConfig  = {
     cookies: {
         token: 'accessToken',
         username: 'username',
+        user: 'userData'
     },
     endpoint: {
         login: endpointDomain + '/auth/login',

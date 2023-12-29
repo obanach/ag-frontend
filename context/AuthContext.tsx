@@ -1,19 +1,17 @@
 "use client";
-import { useRouter } from 'next/navigation'
-import {createContext, ReactNode, useState} from "react";
-import {AuthValuesType, ErrCallbackType, LoginParams, UserDataType} from "@/context/types";
+import {createContext, ReactNode} from "react";
+import {AuthValuesType, CallbackType, LoginParams, UserDataType} from "@/context/types";
 import {authConfig} from "@/config/auth";
 import axios from "axios";
 
 
 const defaultProvider: AuthValuesType = {
-    user: null,
-    loading: true,
-    token: null,
+    getToken: () => null,
     login: () => Promise.resolve(),
     logout: () => Promise.resolve(),
-    checkLogin: () => Promise.resolve(),
     fetchUser: () => Promise.resolve(),
+    getUser: () => null,
+    getLastUsername: () => null
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -23,74 +21,96 @@ type Props = {
 }
 
 const AuthProvider = ({ children }: Props) => {
-    const router = useRouter()
-    const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
-    const [token, setToken] = useState<string | null>(defaultProvider.token)
-    const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
+    const getUser = () => {
+        const userData = window.localStorage.getItem(authConfig.cookies.user);
+        return userData ? JSON.parse(userData) : null;
+    };
+    const setUserInStorage = (user: UserDataType) => window.localStorage.setItem(authConfig.cookies.user, JSON.stringify(user));
+    const removeUserFromStorage = () => window.localStorage.removeItem(authConfig.cookies.user);
 
-    async function handleCheckLogin() {
-        const token = window.localStorage.getItem(authConfig.cookies.token)
-        setLoading(true);
-        if (token) {
-            setToken(token);
-            await handleFetchUser()
-        } else {
-            handleLogout();
+    const getLastUsername = () => {
+        if (typeof window !== 'undefined') {
+            return window.localStorage.getItem(authConfig.cookies.username) || '';
         }
-        setLoading(false);
+        return '';
     }
+    const setLastUsernameInStorage = (username: string) => window.localStorage.setItem(authConfig.cookies.username, username);
+    const removeLastUsernameFromStorage = () => window.localStorage.removeItem(authConfig.cookies.username);
 
-    async function handleLogin(params: LoginParams, errorCallback?: ErrCallbackType) {
+    const getToken = () => window.localStorage.getItem(authConfig.cookies.token);
+    const setTokenInStorage = (token: string) => window.localStorage.setItem(authConfig.cookies.token, token);
+    const removeTokenFromStorage = () => window.localStorage.removeItem(authConfig.cookies.token);
+
+    async function handleLogin(params: LoginParams, callback?: CallbackType) {
         axios
-            .post(authConfig.endpoint.login, params)
+            .post(authConfig.endpoint.login, {
+                username: params.username,
+                password: params.password
+            })
             .then(async response => {
-                params.rememberMe ? window.localStorage.setItem(authConfig.cookies.username, params.username) : window.localStorage.removeItem(authConfig.cookies.username)
-                window.localStorage.setItem(authConfig.cookies.token, response.data.token)
-                await handleFetchUser()
-                await router.push('/app')
+                params.rememberMe ? setLastUsernameInStorage(params.username) : removeLastUsernameFromStorage();
+                setTokenInStorage(response.data.token);
+                await handleFetchUser();
+                if (callback) {
+                    callback(true, null)
+                }
             })
             .catch(err => {
-                if (errorCallback) errorCallback(err)
+                if (callback) {
+                    callback(false, err.response.data.message)
+                }
             })
     }
 
-    async function handleFetchUser() {
-        const token = window.localStorage.getItem(authConfig.cookies.token)
+    async function handleFetchUser(callback?: CallbackType) {
         await axios
             .get( authConfig.endpoint.user, {
                 headers: {
-                    Authorization: 'Bearer ' + token
+                    Authorization: 'Bearer ' + getToken()
                 }
             })
             .then(async response => {
                 if (response.status !== 200) {
                     handleLogout();
-                    return;
+                    if (callback) {
+                        callback(false, response.data.message)
+                    }
                 }
-                setUser({ ...response.data })
-                setToken(token);
+                setUserInStorage({
+                    username: response.data.username,
+                    email: response.data.email,
+                    firstName: response.data.firstName,
+                    lastLame: response.data.lastLame,
+                    avatar: response.data.avatar,
+                    createdAt: response.data.createdAt,
+                    updatedAt: response.data.updatedAt,
+                    verified: response.data.verified
+                })
+                if (callback) {
+                    callback(true, null)
+                }
             })
             .catch(() => {
                 handleLogout();
+                if (callback) {
+                    callback(false, 'Error while fetching user.')
+                }
             })
     }
 
     const handleLogout = () => {
-        setUser(null);
-        setToken(null);
-        window.localStorage.removeItem(authConfig.cookies.token);
-        router.push('/auth/login');
+        removeUserFromStorage()
+        removeTokenFromStorage();
     }
 
     const values = {
-        user,
-        token,
-        loading,
         login: handleLogin,
         logout: handleLogout,
         fetchUser: handleFetchUser,
-        checkLogin: handleCheckLogin
+        getLastUsername,
+        getToken,
+        getUser
     }
 
     return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

@@ -1,18 +1,29 @@
 "use client";
-import {ReactNode} from "react";
+import React, {ReactNode, useEffect} from "react";
 import {useAuth} from "@/hooks/useAuth";
 import {Spinner} from "@/components/spinner";
+import {useRouter} from "next/navigation";
 interface props {
     children: ReactNode
 }
 
 function AppLayout({ children}: props) {
-
+    const router = useRouter()
     const auth = useAuth()
-    auth.checkLogin()
+    const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
-    if(auth.loading) {
-        return <Spinner />
+    useEffect(() => {
+        auth.fetchUser((status) => {
+            if (status) {
+                setIsLoading(false)
+            } else {
+                router.push('/auth/login');
+            }
+        })
+    })
+
+    if (isLoading) {
+        return <Spinner/>
     }
 
     return (
