@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import * as React from "react";
 import {BatteryFullIcon, FanIcon, LightbulbIcon, RefreshCwIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
-import {FanSwitch} from "@/app/hub/components/fan-switch";
+import {FanSwitch} from "@/app/app/hub/components/fan-switch";
 
 export function LightSwitch() {
   return (

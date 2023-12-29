@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import {ReactNode} from "react";
 import {ThemeProvider} from "@/components/theme-provider";
-import {SiteHeader} from "@/components/site-header";
+import {AuthProvider} from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,16 +18,14 @@ interface RootLayoutProps {
 }
 
 function RootLayout({ children}: RootLayoutProps) {
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-            <div className="relative flex min-h-screen flex-col">
-              <SiteHeader />
-                <div className="container relative mt-5">
-                    {children}
-                </div>
-            </div>
+            <AuthProvider>
+                {children}
+            </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

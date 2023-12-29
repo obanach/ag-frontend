@@ -28,7 +28,9 @@ export type UserDataType = {
 export type AuthValuesType = {
     token: string | null
     loading: boolean
-    logout: () => void
     user: UserDataType | null
     login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
+    logout: () => void
+    checkLogin: () => void
+    fetchUser: () => void
 }
