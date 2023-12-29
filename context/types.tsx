@@ -1,4 +1,11 @@
-export type ErrCallbackType = (err: { [key: string]: string }) => void
+export type ErrCallbackType = (
+    err: string
+) => void
+
+export type CallbackType = (
+    success: boolean,
+    message: string | null
+) => void
 
 export type RegisterParams = {
     username: string
@@ -26,11 +33,10 @@ export type UserDataType = {
 }
 
 export type AuthValuesType = {
-    token: string | null
-    loading: boolean
-    user: UserDataType | null
-    login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
+    login: (params: LoginParams, callback?: CallbackType) => void
     logout: () => void
-    checkLogin: () => void
-    fetchUser: () => void
+    fetchUser: (callback?: CallbackType) => void
+    getToken: () => string | null
+    getUser: () => UserDataType | null
+    getLastUsername: () => string | null
 }

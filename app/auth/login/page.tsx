@@ -1,25 +1,54 @@
 "use client";
+
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import React from "react";
+import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {Checkbox} from "@/components/ui/checkbox";
+import {useAuth} from "@/hooks/useAuth";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Spinner} from "@/components/spinner";
 
 function LoginPage() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [username, setUsername] = React.useState<string>('')
+    const auth = useAuth();
+
+    const [loading, setLoading] = React.useState<boolean>(true)
+    const [logging, setLogging] = React.useState<boolean>(false)
+    const [username, setUsername] = React.useState<string>(auth.getLastUsername() || '')
     const [password, setPassword] = React.useState<string>('')
+
     const [rememberMe, setRememberMe] = React.useState<boolean>(false)
+    const [error, setError] = React.useState<string>('')
+
+
+    useEffect(() => {
+        if (auth.getUser()) {
+            router.push('/app')
+            return
+        }
+        setLoading(false)
+    }, [])
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
-        setIsLoading(true)
+        setLogging(true)
 
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
+        auth.login({username, password, rememberMe}, (success, message) =>{
+            if (success) {
+                router.push('/app');
+            } else {
+                if (message) {
+                    setError(message)
+                }
+            }
+        })
+        setLogging(false)
+    }
+
+    if (loading) {
+        return <Spinner />
     }
 
     return (
@@ -35,6 +64,15 @@ function LoginPage() {
             <div className={'grid gap-6'}>
                 <form onSubmit={onSubmit}>
                     <div className="grid gap-2">
+                        {error && (
+                            <Alert variant="destructive">
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>
+                                    {error}
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
                         <div className="grid gap-1">
                             <Label className="sr-only" htmlFor="username">
                                 Username
@@ -46,7 +84,8 @@ function LoginPage() {
                                 autoCapitalize="none"
                                 autoComplete="username"
                                 autoCorrect="off"
-                                disabled={isLoading}
+                                disabled={logging}
+                                value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
@@ -61,13 +100,16 @@ function LoginPage() {
                                 autoCapitalize="none"
                                 autoComplete="password"
                                 autoCorrect="off"
-                                disabled={isLoading}
+                                disabled={logging}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
                         <div className="grid gap-1 my-2">
                             <div className="flex items-center space-x-3">
-                                <Checkbox id="rememberme" />
+                                <Checkbox id="rememberme"
+                                          disabled={logging}
+                                          checked={rememberMe}
+                                          onCheckedChange={() => setRememberMe(!rememberMe)}/>
                                 <label
                                     htmlFor="rememberme"
                                     className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -77,7 +119,7 @@ function LoginPage() {
                             </div>
                         </div>
 
-                        <Button disabled={isLoading}>
+                        <Button disabled={logging}>
                             Log in
                         </Button>
                     </div>
@@ -92,7 +134,7 @@ function LoginPage() {
                       </span>
                     </div>
                 </div>
-                <Button variant="outline" type="button" disabled={isLoading} onClick={() => {
+                <Button variant="outline" type="button" disabled={logging} onClick={() => {
                     router.push('/auth/register')
                 }}>
                     Create an account
