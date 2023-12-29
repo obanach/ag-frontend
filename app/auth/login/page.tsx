@@ -4,11 +4,14 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import React from "react";
 import {useRouter} from "next/navigation";
-
+import {Checkbox} from "@/components/ui/checkbox";
 
 function LoginPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [username, setUsername] = React.useState<string>('')
+    const [password, setPassword] = React.useState<string>('')
+    const [rememberMe, setRememberMe] = React.useState<boolean>(false)
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
@@ -44,6 +47,7 @@ function LoginPage() {
                                 autoComplete="username"
                                 autoCorrect="off"
                                 disabled={isLoading}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                         <div className="grid gap-1">
@@ -58,7 +62,19 @@ function LoginPage() {
                                 autoComplete="password"
                                 autoCorrect="off"
                                 disabled={isLoading}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
+                        </div>
+                        <div className="grid gap-1 my-2">
+                            <div className="flex items-center space-x-3">
+                                <Checkbox id="rememberme" />
+                                <label
+                                    htmlFor="rememberme"
+                                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Remember me
+                                </label>
+                            </div>
                         </div>
 
                         <Button disabled={isLoading}>
@@ -76,7 +92,9 @@ function LoginPage() {
                       </span>
                     </div>
                 </div>
-                <Button variant="outline" type="button" disabled={isLoading} onClick={() => {router.push('/auth/register')}}>
+                <Button variant="outline" type="button" disabled={isLoading} onClick={() => {
+                    router.push('/auth/register')
+                }}>
                     Create an account
                 </Button>
             </div>

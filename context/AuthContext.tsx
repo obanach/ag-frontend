@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router'
-import {createContext, ReactNode, useEffect, useState} from "react";
+"use client";
+import { useRouter } from 'next/navigation'
+import {createContext, ReactNode, useState} from "react";
 import {AuthValuesType, ErrCallbackType, LoginParams, UserDataType} from "@/context/types";
 import {authConfig} from "@/config/auth";
 import axios from "axios";
@@ -10,7 +11,9 @@ const defaultProvider: AuthValuesType = {
     loading: true,
     token: null,
     login: () => Promise.resolve(),
-    logout: () => Promise.resolve()
+    logout: () => Promise.resolve(),
+    checkLogin: () => Promise.resolve(),
+    fetchUser: () => Promise.resolve(),
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -26,18 +29,26 @@ const AuthProvider = ({ children }: Props) => {
     const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
 
-    useEffect(() => {
-
-    }, [])
+    async function handleCheckLogin() {
+        const token = window.localStorage.getItem(authConfig.cookies.token)
+        setLoading(true);
+        if (token) {
+            setToken(token);
+            await handleFetchUser()
+        } else {
+            handleLogout();
+        }
+        setLoading(false);
+    }
 
     async function handleLogin(params: LoginParams, errorCallback?: ErrCallbackType) {
         axios
             .post(authConfig.endpoint.login, params)
             .then(async response => {
                 params.rememberMe ? window.localStorage.setItem(authConfig.cookies.username, params.username) : window.localStorage.removeItem(authConfig.cookies.username)
-                setToken(response.data.token)
+                window.localStorage.setItem(authConfig.cookies.token, response.data.token)
                 await handleFetchUser()
-                await router.push('/')
+                await router.push('/app')
             })
             .catch(err => {
                 if (errorCallback) errorCallback(err)
@@ -54,20 +65,22 @@ const AuthProvider = ({ children }: Props) => {
             })
             .then(async response => {
                 if (response.status !== 200) {
-                    handleLogout()
-                    return
+                    handleLogout();
+                    return;
                 }
                 setUser({ ...response.data })
+                setToken(token);
             })
             .catch(() => {
-                handleLogout()
+                handleLogout();
             })
     }
 
     const handleLogout = () => {
-        setUser(null)
-        window.localStorage.removeItem(authConfig.cookies.token)
-        router.push('/auth/login')
+        setUser(null);
+        setToken(null);
+        window.localStorage.removeItem(authConfig.cookies.token);
+        router.push('/auth/login');
     }
 
     const values = {
@@ -76,8 +89,12 @@ const AuthProvider = ({ children }: Props) => {
         loading,
         login: handleLogin,
         logout: handleLogout,
-        fetchUser: handleFetchUser
+        fetchUser: handleFetchUser,
+        checkLogin: handleCheckLogin
     }
 
     return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
 }
+
+
+export { AuthContext, AuthProvider }
