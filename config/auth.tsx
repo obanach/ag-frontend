@@ -1,5 +1,5 @@
 
-const endpointDomain = process.env.NEXT_PUBLIC_API_ENDPOINT_DOMAIN ?? 'http://localhost:8000';
+const endpointDomain = process.env.NEXT_PUBLIC_API_ENDPOINT_DOMAIN ?? 'https://api.autogrow.pl';
 
 export const authConfig  = {
     domain: endpointDomain,
