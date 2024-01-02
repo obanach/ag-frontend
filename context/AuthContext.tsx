@@ -1,6 +1,6 @@
 "use client";
 import {createContext, ReactNode} from "react";
-import {AuthValuesType, CallbackType, LoginParams, UserDataType} from "@/context/types";
+import {AuthValuesType, CallbackType, LoginParams, RegisterParams, UserDataType} from "@/context/types";
 import {authConfig} from "@/config/auth";
 import axios from "axios";
 
@@ -8,6 +8,7 @@ import axios from "axios";
 const defaultProvider: AuthValuesType = {
     getToken: () => null,
     login: () => Promise.resolve(),
+    register: () => Promise.resolve(),
     logout: () => Promise.resolve(),
     fetchUser: () => Promise.resolve(),
     getUser: () => null,
@@ -23,8 +24,11 @@ type Props = {
 const AuthProvider = ({ children }: Props) => {
 
     const getUser = () => {
-        const userData = window.localStorage.getItem(authConfig.cookies.user);
-        return userData ? JSON.parse(userData) : null;
+        if (typeof window !== 'undefined') {
+            const userData = window.localStorage.getItem(authConfig.cookies.user);
+            return userData ? JSON.parse(userData) : null;
+        }
+        return null;
     };
     const setUserInStorage = (user: UserDataType) => window.localStorage.setItem(authConfig.cookies.user, JSON.stringify(user));
     const removeUserFromStorage = () => window.localStorage.removeItem(authConfig.cookies.user);
@@ -63,6 +67,27 @@ const AuthProvider = ({ children }: Props) => {
             })
     }
 
+    async function handleRegister(params: RegisterParams, callback?: CallbackType) {
+        axios
+            .post(authConfig.endpoint.register, {
+                username: params.username,
+                firstname: params.firstName,
+                lastname: params.lastName,
+                email: params.email,
+                password: params.password
+            })
+            .then(async response => {
+                if (callback) {
+                    callback(true, null)
+                }
+            })
+            .catch(err => {
+                if (callback) {
+                    callback(false, err.response.data.message)
+                }
+            })
+    }
+
     async function handleFetchUser(callback?: CallbackType) {
         await axios
             .get( authConfig.endpoint.user, {
@@ -81,10 +106,9 @@ const AuthProvider = ({ children }: Props) => {
                     username: response.data.username,
                     email: response.data.email,
                     firstName: response.data.firstName,
-                    lastLame: response.data.lastLame,
+                    lastName: response.data.lastName,
                     avatar: response.data.avatar,
                     createdAt: response.data.createdAt,
-                    updatedAt: response.data.updatedAt,
                     verified: response.data.verified
                 })
                 if (callback) {
@@ -106,6 +130,7 @@ const AuthProvider = ({ children }: Props) => {
 
     const values = {
         login: handleLogin,
+        register: handleRegister,
         logout: handleLogout,
         fetchUser: handleFetchUser,
         getLastUsername,

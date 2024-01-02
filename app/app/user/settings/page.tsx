@@ -1,7 +1,6 @@
-import Image from "next/image"
 import {Separator} from "@/components/ui/separator";
 import {SidebarNav} from "@/app/app/user/components/sidebar-nav";
-function ProfilePage() {
+function SettingsPage() {
     return (
         <>
           <div className="block space-y-6 p-10 pb-16">
@@ -27,4 +26,4 @@ function ProfilePage() {
     );
 }
 
-export default ProfilePage;
+export default SettingsPage;

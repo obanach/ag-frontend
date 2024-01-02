@@ -3,6 +3,11 @@ import React, {ReactNode, useEffect} from "react";
 import {useAuth} from "@/hooks/useAuth";
 import {Spinner} from "@/components/spinner";
 import {useRouter} from "next/navigation";
+import {UserNav} from "@/components/user-nav";
+import {ModeToggle} from "@/components/mode-toggle";
+import Link from "next/link";
+import {siteConfig} from "@/config/site";
+import {AppHeader} from "@/components/app-header";
 interface props {
     children: ReactNode
 }
@@ -28,11 +33,9 @@ function AppLayout({ children}: props) {
 
     return (
         <section>
-            <div className="relative flex min-h-screen flex-col">
-                <div className="container relative mt-5">
-                    Tutaj bedzie header
-                    {children}
-                </div>
+            <div className="relative container flex min-h-screen flex-col">
+                <AppHeader />
+                {children}
             </div>
         </section>
     )

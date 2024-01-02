@@ -25,15 +25,15 @@ export type UserDataType = {
     username: string
     email: string
     firstName: string
-    lastLame: string
+    lastName: string
     avatar?: string | null
     createdAt: string
-    updatedAt: string
     verified: boolean
 }
 
 export type AuthValuesType = {
     login: (params: LoginParams, callback?: CallbackType) => void
+    register: (params: RegisterParams, callback?: CallbackType) => void
     logout: () => void
     fetchUser: (callback?: CallbackType) => void
     getToken: () => string | null

@@ -20,22 +20,10 @@ export function SidebarNav({ className, ...props }: HTMLAttributes<HTMLElement>)
       {...props}
     >
       <Link
-          href={'/user/profile'}
+          href={'/app/user/notifications'}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            pathname === '/user/profile'
-              ? "bg-muted hover:bg-muted"
-              : "hover:bg-transparent hover:underline",
-            "justify-start"
-          )}
-        >
-            Profile
-      </Link>
-      <Link
-          href={'/user/notifications'}
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            pathname === '/user/notifications'
+            pathname === '/app/user/notifications'
               ? "bg-muted hover:bg-muted"
               : "hover:bg-transparent hover:underline",
             "justify-start"
@@ -43,6 +31,18 @@ export function SidebarNav({ className, ...props }: HTMLAttributes<HTMLElement>)
         >
             Notifications
       </Link>
+        <Link
+            href={'/app/user/settings'}
+            className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === '/app/user/settings'
+                    ? "bg-muted hover:bg-muted"
+                    : "hover:bg-transparent hover:underline",
+                "justify-start"
+            )}
+        >
+            Settings
+        </Link>
     </nav>
   )
 }
