@@ -9,6 +9,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {useAuth} from "@/hooks/useAuth";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Spinner} from "@/components/spinner";
+import {Icons} from "@/components/icons";
 
 function LoginPage() {
     const router = useRouter();
@@ -38,13 +39,12 @@ function LoginPage() {
         auth.login({username, password, rememberMe}, (success, message) =>{
             if (success) {
                 router.push('/app');
-            } else {
-                if (message) {
-                    setError(message)
-                }
             }
+            if (message) {
+                setError(message)
+            }
+            setLogging(false)
         })
-        setLogging(false)
     }
 
     if (loading) {
@@ -66,7 +66,6 @@ function LoginPage() {
                     <div className="grid gap-2">
                         {error && (
                             <Alert variant="destructive">
-                                <AlertTitle>Error</AlertTitle>
                                 <AlertDescription>
                                     {error}
                                 </AlertDescription>
@@ -79,7 +78,7 @@ function LoginPage() {
                             </Label>
                             <Input
                                 id="username"
-                                placeholder="username"
+                                placeholder="Username"
                                 type="text"
                                 autoCapitalize="none"
                                 autoComplete="username"
@@ -95,7 +94,7 @@ function LoginPage() {
                             </Label>
                             <Input
                                 id="password"
-                                placeholder="password"
+                                placeholder="Password"
                                 type="password"
                                 autoCapitalize="none"
                                 autoComplete="password"
@@ -104,7 +103,7 @@ function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <div className="grid gap-1 my-2">
+                        <div className="grid gap-1 my-4">
                             <div className="flex items-center space-x-3">
                                 <Checkbox id="rememberme"
                                           disabled={logging}
@@ -120,8 +119,12 @@ function LoginPage() {
                         </div>
 
                         <Button disabled={logging}>
+                            {logging && (
+                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Log in
                         </Button>
+
                     </div>
                 </form>
                 <div className="relative">
