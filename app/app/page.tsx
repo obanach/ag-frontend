@@ -9,16 +9,16 @@ export default function App() {
     const user = auth.getUser();
 
   return (
-      <main>
-        <div className="relative flex min-h-screen flex-col">
-          <div className="container relative mt-5">
-                App <br/>
-                {user?.username} <br/>
-                {user?.email} <br/>
-                <button onClick={() => router.push('/auth/logout')}>Logout</button>
+      <div>
+          App <br/>
+          {user?.username} <br/>
+          {user?.email} <br/>
+            {user?.firstName} <br/>
+            {user?.lastName} <br/>
+            {user?.avatar} <br/>
+            {(new Date(user?.createdAt ?? '')).toLocaleDateString(navigator.language || 'en-US', { day: 'numeric', month: 'short', year: 'numeric'})} <br/>
+          <button onClick={() => router.push('/auth/logout')}>Logout</button>
 
-          </div>
-        </div>
-      </main>
+      </div>
   )
 }

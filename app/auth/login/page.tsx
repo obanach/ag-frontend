@@ -7,7 +7,7 @@ import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {Checkbox} from "@/components/ui/checkbox";
 import {useAuth} from "@/hooks/useAuth";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Spinner} from "@/components/spinner";
 import {Icons} from "@/components/icons";
 
