@@ -20,7 +20,7 @@ function LoginPage() {
     const [username, setUsername] = React.useState<string>(auth.getLastUsername() || '')
     const [password, setPassword] = React.useState<string>('')
 
-    const [rememberMe, setRememberMe] = React.useState<boolean>(false)
+    const [rememberMe, setRememberMe] = React.useState<boolean>(true)
     const [error, setError] = React.useState<string>('')
 
 
