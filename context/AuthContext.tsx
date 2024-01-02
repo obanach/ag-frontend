@@ -24,8 +24,11 @@ type Props = {
 const AuthProvider = ({ children }: Props) => {
 
     const getUser = () => {
-        const userData = window.localStorage.getItem(authConfig.cookies.user);
-        return userData ? JSON.parse(userData) : null;
+        if (typeof window !== 'undefined') {
+            const userData = window.localStorage.getItem(authConfig.cookies.user);
+            return userData ? JSON.parse(userData) : null;
+        }
+        return null;
     };
     const setUserInStorage = (user: UserDataType) => window.localStorage.setItem(authConfig.cookies.user, JSON.stringify(user));
     const removeUserFromStorage = () => window.localStorage.removeItem(authConfig.cookies.user);
