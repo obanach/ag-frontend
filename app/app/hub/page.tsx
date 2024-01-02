@@ -17,12 +17,14 @@ import Link from "next/link";
 function HubPage() {
     return (
         <div>
-            <PageHeader className="pb-8">
-                <Button variant="ghost">
-                    <ChevronLeft className="h-4 w-4" />
-                    Back to hub list
+            <div className="pb-3">
+                <Button variant="ghost" asChild>
+                    <Link href={'/app'}>
+                        <ChevronLeft className="h-4 w-4" />
+                        Back to list
+                    </Link>
                 </Button>
-                <PageHeaderHeading>
+                <PageHeaderHeading className={'mt-2 mb-8'}>
                     <span className={"text-gray-300 dark:text-gray-800 mr-2 "}>
                         #1
                     </span> My first Hub
@@ -53,7 +55,7 @@ function HubPage() {
                 </NavigationMenu>
 
                 </PageHeaderDescription>
-            </PageHeader>
+            </div>
             <div className="grid grid-rows-3 grid-cols-2 gap-5">
               <div className="row-span-3"><Environment /></div>
               <div className="row-span-1"><LightSwitch /></div>
