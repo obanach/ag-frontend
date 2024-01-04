@@ -3,6 +3,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {LogTable, LogTableSkeleton} from "@/app/app/hub/[hubid]/logs/components/log-table";
 import {Badge} from "@/components/ui/badge";
+import {useEffect, useState} from "react";
 
 type LogType = {
     id: number
@@ -85,10 +86,21 @@ const data: LogType[] = [
 
 function HubLogsPage() {
 
+    const [loading, setLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }, []);
+
+    if (loading) {
+        return <LogTableSkeleton />
+    }
+
     return (
         <div>
-            {/*<LogTable columns={columns} data={data} />*/}
-            <LogTableSkeleton />
+            <LogTable columns={columns} data={data} />
         </div>
     );
 }
