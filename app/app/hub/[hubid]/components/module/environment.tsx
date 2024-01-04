@@ -70,8 +70,8 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
                     </div>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="mt-5 hidden md:block">
-                <div className="h-[300px]">
+            <CardContent className="hidden md:block">
+                <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             data={data}
@@ -199,7 +199,7 @@ const EnvironmentModuleSkeleton: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center justify-center">
-                    <Skeleton className="h-10 w-36"/>
+                    <Skeleton className="h-10 w-20 md:w-36"/>
                 </div>
             </div>
             <div className={'px-5 pb-5 hidden md:block'}>
