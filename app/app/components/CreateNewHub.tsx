@@ -81,11 +81,11 @@ function CreateNewHub() {
             <AlertDialog open={codeModal}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className={'text-center'}>Pair</AlertDialogTitle>
+                        <AlertDialogTitle className={'text-center'}>Paring...</AlertDialogTitle>
                         <AlertDialogDescription>
-                            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-[.25em] lg:text-5xl text-center my-5">
+                            <p className="text-4xl font-extrabold text-primary tracking-[.25em] lg:text-5xl text-center my-5">
                                 123123
-                            </h1>
+                            </p>
                             <p className={'text-sm text-muted-foreground text-center mb-5'}>
                                 Enter this code in your hub to pair it with this account.
                             </p>

@@ -16,7 +16,7 @@ export default function App() {
         <div className={''}>
 
 
-            <div className={'my-5 flex items-center'}>
+            <div className={'mb-5 flex items-center'}>
                 <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] mr-auto">
                     List of hubs
                 </h2>
