@@ -26,7 +26,7 @@ export default function App() {
             </div>
 
             <Button asChild>
-                <Link href={'/app/hub'}>Example hub</Link>
+                <Link href={'/app/hub/example'}>Example hub</Link>
             </Button>
 
 
