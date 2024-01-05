@@ -4,6 +4,8 @@ import {Button} from "@/components/ui/button";
 import {Action, ActionEmpty, ActionSkeleton} from "@/app/app/hub/[hubid]/actions/components/switch/action";
 import {useToast} from "@/components/ui/use-toast";
 import {Skeleton} from "@/components/ui/skeleton";
+import NewActionDialog from "@/app/app/hub/[hubid]/actions/components/switch/new-action";
+import {ActionType} from "@/app/app/hub/[hubid]/actions/type";
 
 interface Props {
     name: string
@@ -21,7 +23,7 @@ const actionsData = [
     {
         id: 2,
         name: 'Turn light off',
-        moduleName: 'Fan out',
+        moduleName: 'Fan in',
         state: false,
         time: 43200,
         active: false
@@ -31,6 +33,20 @@ const actionsData = [
 const SwitchAction: React.FC<Props> = ({name}: Props) => {
     const { toast } = useToast();
     const [actions, setActions] = React.useState(actionsData);
+
+    const handleNewAction = (action: ActionType) => {
+
+        const newAction = {
+            ...action,
+            id: Math.floor(Math.random() * 1000) + 1,
+            moduleName: name
+        }
+
+        setActions([...actions, newAction]);
+        toast({
+            description: 'New action "' + newAction.name + '" has been added',
+        })
+    }
 
     const onActionActiveChange = (id: number) => {
         const newActions = actions.map((action) => {
@@ -84,7 +100,7 @@ const SwitchAction: React.FC<Props> = ({name}: Props) => {
                 }
             </CardContent>
             <CardFooter className="flex justify-end">
-                <Button variant={'outline'}>Add new</Button>
+                <NewActionDialog onNewAction={handleNewAction}/>
             </CardFooter>
         </Card>
     )
