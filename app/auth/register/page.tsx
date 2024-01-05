@@ -28,12 +28,15 @@ function RegisterPage() {
     const [error, setError] = React.useState<string>('')
 
     useEffect(() => {
-        if (auth.getUser()) {
-            router.push('/app')
-            return
+        const login = () => {
+            if (auth.getUser()) {
+                router.push('/app')
+                return
+            }
+            setLoading(false)
         }
-        setLoading(false)
-    }, [])
+        login();
+    });
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
