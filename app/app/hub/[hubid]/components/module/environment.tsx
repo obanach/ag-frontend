@@ -46,6 +46,10 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
                                         <CircleIcon className="mr-1 h-3 w-3 fill-green-400 text-green-400"/>
                                         Online
                                     </div>
+                                    <div className="flex items-center">
+                                        <BatteryFullIcon className="mr-1 h-3 w-3"/>
+                                        50%
+                                    </div>
                                 </div>
                             </div>
                         </div>
