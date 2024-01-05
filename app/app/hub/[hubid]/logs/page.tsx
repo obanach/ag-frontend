@@ -1,5 +1,4 @@
 "use client";
-
 import {ColumnDef} from "@tanstack/react-table";
 import {LogTable, LogTableSkeleton} from "@/app/app/hub/[hubid]/logs/components/log-table";
 import {Badge} from "@/components/ui/badge";
@@ -16,14 +15,14 @@ const columns: ColumnDef<LogType>[] = [
     {
         accessorKey: "device",
         header: () => <div className="text-left">Device</div>,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             return (<div className="text-left font-medium">{row.getValue("device")}</div>)
         },
     },
     {
         accessorKey: "type",
         header: () => <div className="text-left">Type</div>,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const type = row.getValue("type");
             switch (type) {
                 case 0:
@@ -44,8 +43,11 @@ const columns: ColumnDef<LogType>[] = [
     {
         accessorKey: "date",
         header: () => <div className="text-right">Date</div>,
-        cell: ({ row }) => {
-            const formattedDate = new Intl.DateTimeFormat('pl-PL', { dateStyle: 'medium', timeStyle: 'medium' }).format(row.getValue('date'));
+        cell: ({row}) => {
+            const formattedDate = new Intl.DateTimeFormat('pl-PL', {
+                dateStyle: 'medium',
+                timeStyle: 'medium'
+            }).format(row.getValue('date'));
 
             return (<div className="text-right font-medium">{formattedDate}</div>)
         },
@@ -95,12 +97,12 @@ function HubLogsPage() {
     }, []);
 
     if (loading) {
-        return <LogTableSkeleton />
+        return <LogTableSkeleton/>
     }
 
     return (
         <div>
-            <LogTable columns={columns} data={data} />
+            <LogTable columns={columns} data={data}/>
         </div>
     );
 }

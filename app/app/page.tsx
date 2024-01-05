@@ -1,16 +1,38 @@
 "use client";
-import {useAuth} from "@/hooks/useAuth";
-import {useRouter} from "next/navigation";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
 import CreateNewHub from "@/app/app/components/CreateNewHub";
+import React, {useEffect, useState} from "react";
+import {HubCard, HubCardEmpty, HubCardSkeleton} from "@/app/app/components/hub";
+import {HubType} from "@/app/app/type";
+
+const hubsData = [
+    {
+        id: 1,
+        name: 'My First Hub',
+        modules: 3
+    },
+    {
+        id: 2,
+        name: 'Hub 2',
+        modules: 2
+    },
+    {
+        id: 3,
+        name: 'Hub 3',
+        modules: 5
+    }
+]
 
 export default function App() {
 
-    const router = useRouter();
-    const auth = useAuth();
-    const user = auth.getUser();
+    const [hubs, setHubs] = React.useState(hubsData);
+    const [loading, setLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }, []);
+
 
     return (
         <div className={''}>
@@ -20,16 +42,24 @@ export default function App() {
                 <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] mr-auto">
                     List of hubs
                 </h2>
-
-                <CreateNewHub />
-
+                <CreateNewHub/>
             </div>
 
-            <Button asChild>
-                <Link href={'/app/hub/example'}>Example hub</Link>
-            </Button>
 
-
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {
+                    loading
+                        ? <>
+                            <HubCardSkeleton/><HubCardSkeleton/><HubCardSkeleton/><HubCardSkeleton/><HubCardSkeleton/></>
+                        : hubs.length === 0
+                            ? <div className="col-span-3"><HubCardEmpty/></div>
+                            : hubs.map((hub: HubType) => (
+                                <div className="col-span-1" key={hub.id}>
+                                    <HubCard id={hub.id} name={hub.name} modules={hub.modules}/>
+                                </div>
+                            ))
+                }
+            </div>
         </div>
     );
 }

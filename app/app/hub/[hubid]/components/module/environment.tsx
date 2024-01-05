@@ -2,14 +2,9 @@
 import {useTheme} from "next-themes"
 import React from 'react';
 import {Line, LineChart, ResponsiveContainer, Tooltip} from "recharts"
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
 import {themes} from "@/config/themes";
-import {BatteryFullIcon, DropletsIcon, RefreshCwIcon, ThermometerIcon} from "lucide-react";
+import {BatteryFullIcon, ThermometerIcon} from "lucide-react";
 import {CircleIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
@@ -93,28 +88,28 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
                                             <div className="rounded-lg border bg-background p-2 shadow-sm">
                                                 <div className="grid grid-cols-3 gap-3">
                                                     <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                  Hum.
-                                </span>
+                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                                          Hum.
+                                                        </span>
                                                         <span className="font-bold">
-                                  {payload[1].value}%
-                                </span>
+                                                          {payload[1].value}%
+                                                        </span>
                                                     </div>
                                                     <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                  Dirt
-                                </span>
+                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                                          Dirt
+                                                        </span>
                                                         <span className="font-bold">
-                                  {payload[2].value}%
-                                </span>
+                                                          {payload[2].value}%
+                                                        </span>
                                                     </div>
                                                     <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                  Temp.
-                                </span>
+                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                                          Temp.
+                                                        </span>
                                                         <span className="font-bold text-muted-foreground">
-                                    {payload[0].value} °C
-                                </span>
+                                                            {payload[0].value} °C
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -213,4 +208,4 @@ const EnvironmentModuleSkeleton: React.FC = () => {
     )
 }
 
-export { EnvironmentModule, EnvironmentModuleSkeleton }
+export {EnvironmentModule, EnvironmentModuleSkeleton}

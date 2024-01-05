@@ -2,7 +2,7 @@ import {CircleIcon} from "@radix-ui/react-icons"
 import {Card} from "@/components/ui/card"
 import {Switch} from "@/components/ui/switch";
 import * as React from "react";
-import {BatteryFullIcon, FanIcon, RefreshCwIcon} from "lucide-react";
+import {FanIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
 

@@ -1,19 +1,7 @@
 "use client"
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-} from "@tanstack/react-table"
+import {ColumnDef, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table"
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import * as React from "react";
 import {Card} from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -81,7 +69,7 @@ function LogTable<TData, TValue>({columns, data}: DataTableProps<TData, TValue>)
 function LogTableSkeleton() {
     return (
         <div>
-            <div className="mb-5 w-full flex items-center justify-end">
+            <div className="mb-5 w-full flex items-center justify-end hidden">
                 <Skeleton className="h-8 w-36 mr-3"/>
                 <Skeleton className="h-8 w-56"/>
             </div>

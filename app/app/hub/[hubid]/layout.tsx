@@ -1,6 +1,6 @@
 "use client";
 import {ReactNode} from "react";
-import {PageHeaderDescription, PageHeaderHeading} from "@/components/page-header";
+import {PageHeaderHeading} from "@/components/page-header";
 import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
 
 interface props {
@@ -8,7 +8,7 @@ interface props {
     params: { hubid: number }
 }
 
-function HubLayout({ children, params }: props) {
+function HubLayout({children, params}: props) {
 
     //TODO: Check if hub exists and get hub name
 

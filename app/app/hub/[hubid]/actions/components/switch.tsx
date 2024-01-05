@@ -1,6 +1,5 @@
 import * as React from "react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
 import {Action, ActionEmpty, ActionSkeleton} from "@/app/app/hub/[hubid]/actions/components/switch/action";
 import {useToast} from "@/components/ui/use-toast";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -31,7 +30,7 @@ const actionsData = [
 ]
 
 const SwitchAction: React.FC<Props> = ({name}: Props) => {
-    const { toast } = useToast();
+    const {toast} = useToast();
     const [actions, setActions] = React.useState(actionsData);
 
     const handleNewAction = (action: ActionType) => {
@@ -78,12 +77,13 @@ const SwitchAction: React.FC<Props> = ({name}: Props) => {
         <Card>
             <CardHeader>
                 <CardTitle>{name}</CardTitle>
-                <CardDescription>You can set up to 5 actions that will happen on your module at certain time</CardDescription>
+                <CardDescription>You can set up to 5 actions that will happen on your module at certain
+                    time</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
                 {
                     actions.length === 0
-                        ? <ActionEmpty />
+                        ? <ActionEmpty/>
                         : actions.map((action) => (
                             <Action
                                 key={action.id}
@@ -114,8 +114,8 @@ const SwitchActionSkeleton: React.FC = () => {
                 <CardDescription><Skeleton className="h-5 w-72"/></CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-                <ActionSkeleton />
-                <ActionSkeleton />
+                <ActionSkeleton/>
+                <ActionSkeleton/>
             </CardContent>
             <CardFooter className="flex justify-end">
                 <Skeleton className="h-8 w-20"/>
@@ -124,4 +124,4 @@ const SwitchActionSkeleton: React.FC = () => {
     )
 }
 
-export { SwitchAction, SwitchActionSkeleton };
+export {SwitchAction, SwitchActionSkeleton};

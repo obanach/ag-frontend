@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CheckCircle2, Clock4, Info, Terminal, XCircle} from "lucide-react";
+import {CheckCircle2, Info, XCircle} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
 import {Switch} from "@/components/ui/switch";
 import {Button} from "@/components/ui/button";
@@ -50,9 +50,11 @@ const Action: React.FC<Props> = ({id, name, moduleName, time, state, active, onA
                     {name}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                    If time is <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                    If time is <code
+                    className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
                     {secondsToHm(time)}
-                </code> then set <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold uppercase">
+                </code> then set <code
+                    className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold uppercase">
                     {moduleName}
                 </code> to <Badge variant={state ? 'default' : 'outline'}>{state ? 'ON' : 'OFF'}</Badge>
                 </p>

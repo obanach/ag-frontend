@@ -14,12 +14,12 @@ function HubActionsPage() {
     }, []);
 
     if (loading) {
-        return <SwitchActionSkeleton />
+        return <SwitchActionSkeleton/>
     }
 
     return (
         <div>
-            <SwitchAction name={'Fan in'} />
+            <SwitchAction name={'Fan in'}/>
         </div>
     );
 }

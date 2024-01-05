@@ -2,7 +2,8 @@ import * as React from "react";
 import {
     Dialog,
     DialogContent,
-    DialogDescription, DialogFooter,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
@@ -10,11 +11,9 @@ import {Button} from "@/components/ui/button";
 import {ActionType} from "@/app/app/hub/[hubid]/actions/type";
 import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import {Label} from "@/components/ui/label";
-import {Select, SelectTrigger,  SelectContent, SelectItem, SelectValue} from "@/components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import {Alert} from "@/components/ui/alert";
-import {useEffect} from "react";
-
 
 interface Props {
     onNewAction?: (action: ActionType) => void
@@ -26,7 +25,7 @@ const NewActionDialog: React.FC<Props> = ({onNewAction}: Props) => {
 
     const [name, setName] = React.useState<string>('');
     const [time, setTime] = React.useState<string>('');
-    const [state, setState] = React.useState<string | undefined >(undefined);
+    const [state, setState] = React.useState<string | undefined>(undefined);
 
 
     const handleNewAction = () => {
@@ -91,7 +90,7 @@ const NewActionDialog: React.FC<Props> = ({onNewAction}: Props) => {
                         </DialogDescription>
                     </DialogHeader>
                     <DialogBody>
-                        {error && <Alert variant={'destructive'}>{error}</Alert> }
+                        {error && <Alert variant={'destructive'}>{error}</Alert>}
                         <div className="grid grid-cols-2 gap-4 my-3">
                             <div className="grid col-span-2 gap-2">
                                 <Label htmlFor="name">Name of new action</Label>
