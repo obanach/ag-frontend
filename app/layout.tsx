@@ -4,6 +4,7 @@ import './globals.css'
 import {ReactNode} from "react";
 import {ThemeProvider} from "@/components/theme-provider";
 import {AuthProvider} from "@/context/AuthContext";
+import {Toaster} from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +26,7 @@ function RootLayout({ children}: RootLayoutProps) {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <AuthProvider>
                 {children}
+                <Toaster />
             </AuthProvider>
         </ThemeProvider>
       </body>

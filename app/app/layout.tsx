@@ -3,16 +3,13 @@ import React, {ReactNode, useEffect} from "react";
 import {useAuth} from "@/hooks/useAuth";
 import {Spinner} from "@/components/spinner";
 import {useRouter} from "next/navigation";
-import {UserNav} from "@/components/user-nav";
-import {ModeToggle} from "@/components/mode-toggle";
-import Link from "next/link";
-import {siteConfig} from "@/config/site";
 import {AppHeader} from "@/components/app-header";
+
 interface props {
     children: ReactNode
 }
 
-function AppLayout({ children}: props) {
+function AppLayout({children}: props) {
     const router = useRouter()
     const auth = useAuth()
     const [isLoading, setIsLoading] = React.useState<boolean>(true)
@@ -34,7 +31,7 @@ function AppLayout({ children}: props) {
     return (
         <section>
             <div className="relative container flex min-h-screen flex-col">
-                <AppHeader />
+                <AppHeader/>
                 {children}
             </div>
         </section>

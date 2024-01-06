@@ -1,13 +1,9 @@
 "use client";
 
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
-import {Checkbox} from "@/components/ui/checkbox";
 import {useAuth} from "@/hooks/useAuth";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Spinner} from "@/components/spinner";
 import {Icons} from "@/components/icons";
 
@@ -17,38 +13,21 @@ function AccountCreatedPage() {
 
     const [loading, setLoading] = React.useState<boolean>(true)
     const [logging, setLogging] = React.useState<boolean>(false)
-    const [username, setUsername] = React.useState<string>(auth.getLastUsername() || '')
-    const [password, setPassword] = React.useState<string>('')
-
-    const [rememberMe, setRememberMe] = React.useState<boolean>(false)
-    const [error, setError] = React.useState<string>('')
 
 
     useEffect(() => {
-        if (auth.getUser()) {
-            router.push('/app')
-            return
+        const login = () => {
+            if (auth.getUser()) {
+                router.push('/app')
+                return
+            }
+            setLoading(false)
         }
-        setLoading(false)
-    }, [])
-
-    async function onSubmit(event: React.SyntheticEvent) {
-        event.preventDefault()
-        setLogging(true)
-
-        auth.login({username, password, rememberMe}, (success, message) =>{
-            if (success) {
-                router.push('/app');
-            }
-            if (message) {
-                setError(message)
-            }
-            setLogging(false)
-        })
-    }
+        login();
+    })
 
     if (loading) {
-        return <Spinner />
+        return <Spinner/>
     }
 
     return (

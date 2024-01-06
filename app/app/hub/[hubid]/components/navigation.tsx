@@ -22,28 +22,32 @@ const HubNavigation: React.FC<Props> = ({hubid, classname}: Props) => {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <Link href={'/app/hub/' + hubid} legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname == '/app/hub/' + hubid}>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}
+                                            active={pathname == '/app/hub/' + hubid}>
                             Modules
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <Link href={'/app/hub/' + hubid + '/actions'} legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname == '/app/hub/' + hubid + '/actions'}>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}
+                                            active={pathname == '/app/hub/' + hubid + '/actions'}>
                             Actions
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <Link href={'/app/hub/' + hubid + '/logs'} legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname == '/app/hub/' + hubid + '/logs'}>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}
+                                            active={pathname == '/app/hub/' + hubid + '/logs'}>
                             Logs
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <Link href={'/app/hub/' + hubid + '/settings'} legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname == '/app/hub/' + hubid + '/settings'}>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}
+                                            active={pathname == '/app/hub/' + hubid + '/settings'}>
                             Settings
                         </NavigationMenuLink>
                     </Link>

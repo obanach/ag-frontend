@@ -2,12 +2,12 @@ import {CircleIcon} from "@radix-ui/react-icons"
 import {Card} from "@/components/ui/card"
 import {Switch} from "@/components/ui/switch";
 import * as React from "react";
-import {BatteryFullIcon, FanIcon, RefreshCwIcon} from "lucide-react";
+import {FanIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
 
 interface Props {
-    name: string
+    name: string | null
 }
 
 const FanModule: React.FC<Props> = ({name}: Props) => {
@@ -24,14 +24,6 @@ const FanModule: React.FC<Props> = ({name}: Props) => {
                             <div className="flex items-center">
                                 <CircleIcon className="mr-1 h-3 w-3 fill-green-400 text-green-400"/>
                                 Online
-                            </div>
-                            <div className="flex items-center">
-                                <BatteryFullIcon className="mr-1 h-3 w-3"/>
-                                50%
-                            </div>
-                            <div className="flex items-center">
-                                <RefreshCwIcon className="mr-1 h-3 w-3"/>
-                                now
                             </div>
                         </div>
                     </div>
