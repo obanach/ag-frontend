@@ -1,7 +1,6 @@
 import * as React from "react";
 import {CheckCircle2, Info, XCircle} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
-import {Switch} from "@/components/ui/switch";
 import {Button} from "@/components/ui/button";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -12,8 +11,6 @@ interface Props {
     moduleName: string
     time: number
     state: boolean
-    active: boolean
-    onActiveChange?: (id: number) => void
     onDelete?: (id: number) => void
 }
 
@@ -28,17 +25,11 @@ function secondsToHm(seconds: number) {
     return hDisplay + ':' + mDisplay;
 }
 
-const Action: React.FC<Props> = ({id, name, moduleName, time, state, active, onActiveChange, onDelete}: Props) => {
+const Action: React.FC<Props> = ({id, name, moduleName, time, state, onDelete}: Props) => {
 
     const deleteAction = () => {
         if (onDelete) {
             onDelete(id)
-        }
-    }
-
-    const toggleActive = () => {
-        if (onActiveChange) {
-            onActiveChange(id)
         }
     }
 
@@ -60,7 +51,6 @@ const Action: React.FC<Props> = ({id, name, moduleName, time, state, active, onA
                 </p>
             </div>
             <div className={'flex items-center gap-3'}>
-                <Switch checked={active} onCheckedChange={toggleActive}/>
                 <Button variant="destructive" size="icon" onClick={(deleteAction)}>
                     <XCircle className="h-4 w-4"/>
                 </Button>
@@ -78,7 +68,6 @@ const ActionSkeleton: React.FC = () => {
                 <Skeleton className="h-4 w-44"/>
             </div>
             <div className={'flex items-center gap-3'}>
-                <Skeleton className="h-8 w-14"/>
                 <Skeleton className="h-8 w-8"/>
             </div>
         </div>
