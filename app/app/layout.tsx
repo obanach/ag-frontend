@@ -13,6 +13,7 @@ function AppLayout({children}: props) {
     const router = useRouter()
     const auth = useAuth()
     const [isLoading, setIsLoading] = React.useState<boolean>(true)
+    const year = new Date().getFullYear();
 
     useEffect(() => {
         auth.fetchUser((status) => {
@@ -29,12 +30,18 @@ function AppLayout({children}: props) {
     }
 
     return (
-        <section>
-            <div className="relative container flex min-h-screen flex-col">
-                <AppHeader/>
+        <div className="container flex flex-col min-h-screen bg-background">
+            <AppHeader/>
+            <div className={'h-full'}>
                 {children}
             </div>
-        </section>
+            <div className="mt-auto"></div>
+            <div className="mt-auto p-5">
+                <div className="text-center text-sm text-gray-500">
+                    <p>© {year} AutoGrow. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
     )
 }
 

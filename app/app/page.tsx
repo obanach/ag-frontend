@@ -39,7 +39,7 @@ export default function App() {
     }
 
     return (
-        <div className={''}>
+        <div>
             <div className={'mb-5 flex items-center'}>
                 <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] mr-auto">
                     List of hubs
@@ -81,5 +81,5 @@ const AppSkeleton: React.FC = () => {
                 <HubCardSkeleton/>
             </div>
         </div>
-)
+    )
 }
