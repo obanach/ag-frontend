@@ -1,7 +1,7 @@
 "use client";
 import CreateNewHub from "@/app/app/components/CreateNewHub";
 import React, {useEffect, useState} from "react";
-import {HubCard, HubCardEmpty, HubCardSkeleton} from "@/app/app/components/hub";
+import {HubCard, HubCardEmpty, HubCardPair, HubCardSkeleton} from "@/app/app/components/hub";
 import {HubType} from "@/app/app/type";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
@@ -47,7 +47,11 @@ export default function App() {
                             ? <div className="col-span-3"><HubCardEmpty/></div>
                             : hubs.map((hub: HubType) => (
                                 <div className="col-span-1" key={hub.id}>
-                                    <HubCard id={hub.id} name={hub.name} modules={hub.modulesCount}/>
+                                    {
+                                        hub.pairCode == null
+                                            ? <HubCard id={hub.id} name={hub.name} modules={hub.modulesCount}/>
+                                            : <HubCardPair id={hub.id} name={hub.name} pairCode={hub.pairCode}/>
+                                    }
                                 </div>
                             ))
                 }
