@@ -4,34 +4,26 @@ import React, {useEffect, useState} from "react";
 import {HubCard, HubCardEmpty, HubCardSkeleton} from "@/app/app/components/hub";
 import {HubType} from "@/app/app/type";
 import {Skeleton} from "@/components/ui/skeleton";
-
-const hubsData = [
-    {
-        id: 1,
-        name: 'My First Hub',
-        modules: 3
-    },
-    {
-        id: 2,
-        name: 'Hub 2',
-        modules: 2
-    },
-    {
-        id: 3,
-        name: 'Hub 3',
-        modules: 5
-    }
-]
+import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
+import {toast} from "@/components/ui/use-toast";
 
 export default function App() {
 
-    const [hubs, setHubs] = React.useState(hubsData);
+    const ag = useAutoGrowApi();
+
+    const [hubs, setHubs] = React.useState([]);
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        ag.makeGet('/app/hub/', [], (response) => {
+            setHubs(response);
+            setLoading(false);
+        }, (error) => {
+            toast({
+                variant: 'destructive',
+                description: error
+            });
+        })
     }, []);
 
     if (loading) {
@@ -55,7 +47,7 @@ export default function App() {
                             ? <div className="col-span-3"><HubCardEmpty/></div>
                             : hubs.map((hub: HubType) => (
                                 <div className="col-span-1" key={hub.id}>
-                                    <HubCard id={hub.id} name={hub.name} modules={hub.modules}/>
+                                    <HubCard id={hub.id} name={hub.name} modules={hub.modulesCount}/>
                                 </div>
                             ))
                 }

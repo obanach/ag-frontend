@@ -38,7 +38,6 @@ function AppLayout({children}: props) {
                     {children}
                 </AutoGrowApiProvider>
             </div>
-            <div className="mt-auto"></div>
             <div className="mt-auto p-5">
                 <div className="text-center text-sm text-gray-500">
                     <p>© {year} AutoGrow. All rights reserved.</p>

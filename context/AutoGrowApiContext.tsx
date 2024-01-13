@@ -12,6 +12,7 @@ import {
 import {authConfig} from "@/config/auth";
 import axios from "axios";
 import {useAuth} from "@/hooks/useAuth";
+import {useRouter} from "next/navigation";
 
 
 const defaultProvider: AutogrowApiType = {
@@ -29,132 +30,50 @@ type Props = {
 
 const AutoGrowApiProvider = ({ children }: Props) => {
 
-    const auth = useAuth()
+    const auth = useAuth();
+    const router = useRouter();
 
 
-    async function handleGet(url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        await axios
-            .get( authConfig.domain + url, {
-                headers: {
-                    Authorization: 'Bearer ' + auth.getToken()
-                },
-                params: params
-            })
+    async function handleRequest(method: 'get' | 'post' | 'put' | 'delete', url: string, params: object = {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
+        await axios[method](authConfig.domain + url, {
+            headers: {
+                Authorization: 'Bearer ' + auth.getToken()
+            },
+            params: method === 'get' || method === 'delete' ? params : undefined,
+            data: method === 'post' || method === 'put' ? params : undefined
+        })
             .then(async response => {
-                if (response.status !== 200) {
-                    if (error) {
-                        if (response.data.message) {
-                            error(response.data.message)
-                        } else {
-                            error('Error while fetching data.')
-                        }
-                    }
-                }
-
                 if (success) {
                     success(response.data)
                 }
             })
-            .catch(() => {
+            .catch((reason) => {
+                let message = 'Server error while fetching data.'
+
+                if (reason.response.status === 400) {
+                    message = reason.response.data.message;
+                }
+
+                if (reason.response.status === 401) {
+                    auth.logout()
+                    router.push('/auth/login')
+                }
+
+                if (reason.response.status === 403) {
+                    message = 'You are not authorized to access this resource.'
+                }
+
                 if (error) {
-                    error('Server error while fetching data.')
+                    error(message)
                 }
             })
     }
-
-    async function handlePost(url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        axios
-            .post(authConfig.domain + url, params, {
-                headers: {
-                    Authorization: 'Bearer ' + auth.getToken()
-                }
-            })
-            .then(async response => {
-                if (response.status !== 200) {
-                    if (error) {
-                        if (response.data.message) {
-                            error(response.data.message)
-                        } else {
-                            error('Error while creating data.')
-                        }
-                    }
-                }
-
-                if (success) {
-                    success(response.data)
-                }
-            })
-            .catch(() => {
-                if (error) {
-                    error('Server error while creating data.')
-                }
-            })
-    }
-    async function handlePut(url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        axios
-            .put(authConfig.domain + url, params, {
-                headers: {
-                    Authorization: 'Bearer ' + auth.getToken()
-                }
-            })
-            .then(async response => {
-                if (response.status !== 200) {
-                    if (error) {
-                        if (response.data.message) {
-                            error(response.data.message)
-                        } else {
-                            error('Error while updating data.')
-                        }
-                    }
-                }
-
-                if (success) {
-                    success(response.data)
-                }
-            })
-            .catch(() => {
-                if (error) {
-                    error('Server error while updating data.')
-                }
-            })
-    }
-
-    async function handleDelete(url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        await axios
-            .delete( authConfig.domain + url, {
-                headers: {
-                    Authorization: 'Bearer ' + auth.getToken()
-                },
-                params: params
-            })
-            .then(async response => {
-                if (response.status !== 200) {
-                    if (error) {
-                        if (response.data.message) {
-                            error(response.data.message)
-                        } else {
-                            error('Error while fetching data.')
-                        }
-                    }
-                }
-
-                if (success) {
-                    success(response.data)
-                }
-            })
-            .catch(() => {
-                if (error) {
-                    error('Server error while fetching data.')
-                }
-            })
-    }
-
 
     const values = {
-        makeGet: handleGet,
-        makePost: handlePost,
-        makePut: handlePut,
-        makeDelete: handleDelete
+        makeGet: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('get', url, params, success, error),
+        makePost: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('post', url, params, success, error),
+        makePut: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('put', url, params, success, error),
+        makeDelete: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('delete', url, params, success, error),
     }
 
     return <AutoGrowApiContext.Provider value={values}>{children}</AutoGrowApiContext.Provider>
