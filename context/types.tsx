@@ -46,8 +46,8 @@ export type AuthValuesType = {
 }
 
 export type AutogrowApiType = {
-    makeGet: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
-    makePost: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
-    makePut: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
-    makeDelete: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makeGet: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makePost: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makePut: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makeDelete: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
 }
