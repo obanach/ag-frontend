@@ -11,14 +11,21 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {wait} from "next/dist/lib/wait";
+import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
+import {Icons} from "@/components/icons";
+import {toast} from "@/components/ui/use-toast";
 
 
 function CreateNewHub() {
+
+    const ag = useAutoGrowApi();
 
     const [createModal, setCreateModal] = useState<boolean>(false)
     const [codeModal, setCodeModal] = useState<boolean>(false)
     const [hubName, setHubName] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false);
+    const [pairCode, setPairCode] = useState<number>(0);
 
     const openModal = () => {
         setError('');
@@ -30,14 +37,27 @@ function CreateNewHub() {
         setCreateModal(false);
     }
     const handleContinue = () => {
+        setLoading(true);
         if (hubName.length < 1) {
             setError('Please enter a hub name');
             return;
         }
-        setCreateModal(false);
-        wait(500).then(() => {
-            setCodeModal(true);
-        });
+
+        ag.makePost('/app/hub/', {name: hubName}, (response) => {
+            setLoading(false);
+            setCreateModal(false);
+            setPairCode(response.pairCode);
+            wait(500).then(() => {
+                setCodeModal(true);
+            });
+        }, (error) => {
+            setLoading(false);
+            setCreateModal(false);
+            toast({
+                variant: 'destructive',
+                description: error
+            })
+        })
     }
 
     const handleClose = () => {
@@ -73,8 +93,13 @@ function CreateNewHub() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <Button variant={'outline'} onClick={handleCancel}>Cancel</Button>
-                        <Button variant={'default'} onClick={handleContinue}>Continue</Button>
+                        <Button variant={'outline'} onClick={handleCancel} disabled={loading}>Cancel</Button>
+                        <Button variant={'default'} onClick={handleContinue} disabled={loading}>
+                            {loading && (
+                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            )}
+                            Continue
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -83,12 +108,12 @@ function CreateNewHub() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className={'text-center'}>Paring...</AlertDialogTitle>
                         <AlertDialogDescription>
-                            <p className="text-4xl font-extrabold text-primary tracking-[.25em] lg:text-5xl text-center my-5">
-                                123123
-                            </p>
-                            <p className={'text-sm text-muted-foreground text-center mb-5'}>
+                            <div className="text-4xl font-extrabold text-primary tracking-[.25em] lg:text-5xl text-center my-5">
+                                {pairCode}
+                            </div>
+                            <div className={'text-sm text-muted-foreground text-center mb-5'}>
                                 Enter this code in your hub to pair it with this account.
-                            </p>
+                            </div>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

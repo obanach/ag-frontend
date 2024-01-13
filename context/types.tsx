@@ -7,6 +7,10 @@ export type CallbackType = (
     message: string | null
 ) => void
 
+export type ApiSuccessCallbackType = (data: any) => void
+
+export type ApiErrorCallbackType = (message: string) => void
+
 export type RegisterParams = {
     username: string
     email: string
@@ -39,4 +43,11 @@ export type AuthValuesType = {
     getToken: () => string | null
     getUser: () => UserDataType | null
     getLastUsername: () => string | null
+}
+
+export type AutogrowApiType = {
+    makeGet: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makePost: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makePut: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
+    makeDelete: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => void
 }

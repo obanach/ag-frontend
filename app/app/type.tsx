@@ -1,7 +1,9 @@
 interface HubType {
     id: number,
     name: string,
-    modules: number
+    modulesCount: number,
+    pairCode: number | null,
+    pingAt: Date | null,
 }
 
 export type { HubType }

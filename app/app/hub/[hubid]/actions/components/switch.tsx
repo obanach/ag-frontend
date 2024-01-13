@@ -92,8 +92,6 @@ const SwitchAction: React.FC<Props> = ({name}: Props) => {
                                 moduleName={action.moduleName}
                                 state={action.state}
                                 time={action.time}
-                                active={action.active}
-                                onActiveChange={onActionActiveChange}
                                 onDelete={onActionDelete}
                             />
                         ))
