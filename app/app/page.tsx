@@ -11,7 +11,7 @@ export default function App() {
 
     const ag = useAutoGrowApi();
 
-    const [hubs, setHubs] = React.useState([]);
+    const [hubs, setHubs] = React.useState<HubType[]>([]);
     const [loading, setLoading] = useState<boolean>(true)
 
     const load = () => {
@@ -30,6 +30,14 @@ export default function App() {
         setHubs(hubs.filter((h: HubType) => h.id !== hub.id));
     }
 
+    const handleHubCreated = (hub: HubType) => {
+        setHubs([hub, ...hubs]);
+    }
+
+    const handleHubUpdated = (hub: HubType) => {
+        setHubs(hubs.map((h: HubType) => h.id === hub.id ? hub : h));
+    }
+
     useEffect(() => {
         load();
     }, []);
@@ -44,7 +52,7 @@ export default function App() {
                 <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] mr-auto">
                     List of hubs
                 </h2>
-                <CreateNewHub/>
+                <CreateNewHub onHubCreated={handleHubCreated}/>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {
@@ -58,7 +66,8 @@ export default function App() {
                                     {
                                         hub.pairCode == null
                                             ? <HubCard hub={hub} onHubDeleted={handleHubDeleted}/>
-                                            : <HubCardPair hub={hub} onHubDeleted={handleHubDeleted}/>
+                                            : <HubCardPair hub={hub} onHubDeleted={handleHubDeleted}
+                                                           onHubUpdated={handleHubUpdated}/>
                                     }
                                 </div>
                             ))

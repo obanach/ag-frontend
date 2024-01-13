@@ -6,6 +6,7 @@ interface HubType {
     pingAt: Date | null,
     createdAt: Date,
     updatedAt: Date | null
+    online: boolean
 }
 
 export type { HubType }

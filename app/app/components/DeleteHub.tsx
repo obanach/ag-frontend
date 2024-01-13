@@ -1,20 +1,17 @@
 import {Button} from "@/components/ui/button";
 import React, {useState} from "react";
 import {
-    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialog,
     AlertDialogContent,
-    AlertDialogDescription, AlertDialogFooter,
+    AlertDialogDescription,
+    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Alert, AlertDescription} from "@/components/ui/alert";
-import {wait} from "next/dist/lib/wait";
 import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
 import {Icons} from "@/components/icons";
 import {toast} from "@/components/ui/use-toast";
-import {DeleteIcon, Trash} from "lucide-react";
+import {Trash} from "lucide-react";
 import {HubType} from "@/app/app/type";
 
 interface Props {
@@ -44,7 +41,7 @@ const DeleteHub: React.FC<Props> = ({hub, onHubDeleted}: Props) => {
                 onHubDeleted(hub);
             }
             toast({
-                description: 'Hub' + hub.name + ' deleted!'
+                description: 'Hub ' + hub.name + ' deleted!'
             })
             setCreateModal(false);
         }, (error) => {
@@ -59,7 +56,7 @@ const DeleteHub: React.FC<Props> = ({hub, onHubDeleted}: Props) => {
 
     return (
         <>
-            <Button variant="destructive"  size="icon" onClick={openModal}>
+            <Button variant="destructive" size="icon" onClick={openModal}>
                 <Trash className="h-4 w-4"/>
             </Button>
             <AlertDialog open={createModal}>
@@ -76,7 +73,7 @@ const DeleteHub: React.FC<Props> = ({hub, onHubDeleted}: Props) => {
                         <Button variant={'outline'} onClick={handleCancel} disabled={loading}>Cancel</Button>
                         <Button variant={'destructive'} onClick={handleContinue} disabled={loading}>
                             {loading && (
-                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                             )}
                             Delete
                         </Button>
