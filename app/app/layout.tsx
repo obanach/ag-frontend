@@ -4,6 +4,7 @@ import {useAuth} from "@/hooks/useAuth";
 import {Spinner} from "@/components/spinner";
 import {useRouter} from "next/navigation";
 import {AppHeader} from "@/components/app-header";
+import {AutoGrowApiProvider} from "@/context/AutoGrowApiContext";
 
 interface props {
     children: ReactNode
@@ -33,7 +34,9 @@ function AppLayout({children}: props) {
         <div className="container flex flex-col min-h-screen bg-background">
             <AppHeader/>
             <div className={'h-full'}>
-                {children}
+                <AutoGrowApiProvider>
+                    {children}
+                </AutoGrowApiProvider>
             </div>
             <div className="mt-auto"></div>
             <div className="mt-auto p-5">
