@@ -6,47 +6,44 @@ import Link from "next/link";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
 import {Icons} from "@/components/icons";
+import DeleteHub from "@/app/app/components/DeleteHub";
+import {HubType} from "@/app/app/type";
 
 
 interface Props {
-    id: number
-    name: string
-    modules: number
+    hub: HubType
+    onHubDeleted?: (hub: HubType) => void
 }
 
-const HubCard: React.FC<Props> = ({id, name, modules}: Props) => {
+const HubCard: React.FC<Props> = ({hub, onHubDeleted}: Props) => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{name}</CardTitle>
-                <CardDescription>{modules} modules</CardDescription>
+                <CardTitle>{hub.name}</CardTitle>
+                <CardDescription>{hub.modulesCount} modules</CardDescription>
             </CardHeader>
-            <CardFooter className={'justify-end'}>
+            <CardFooter className={'justify-end gap-3'}>
+                <DeleteHub hub={hub} onHubDeleted={onHubDeleted}/>
                 <Button asChild>
-                    <Link href={'/app/hub/' + id}>View</Link>
+                    <Link href={'/app/hub/' + hub.id}>View</Link>
                 </Button>
             </CardFooter>
         </Card>
     )
 }
 
-interface PairProps {
-    id: number
-    name: string
-    pairCode: number
-}
-const HubCardPair: React.FC<PairProps> = ({id, name, pairCode}: PairProps) => {
+const HubCardPair: React.FC<Props> = ({hub, onHubDeleted}: Props) => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{name}</CardTitle>
-                <CardDescription>Pair code: {pairCode}</CardDescription>
+                <CardTitle>{hub.name}</CardTitle>
+                <CardDescription>Pair code: {hub.pairCode}</CardDescription>
             </CardHeader>
+            <CardContent>
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            </CardContent>
             <CardFooter className={'justify-end'}>
-                <Button variant={'default'} disabled={true}>
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Pairing...
-                </Button>
+                <DeleteHub hub={hub} onHubDeleted={onHubDeleted} />
             </CardFooter>
         </Card>
     )

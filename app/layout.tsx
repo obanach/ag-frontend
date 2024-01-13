@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
     title: 'AutoGrow',
     description: 'AutoGrow App allows you to manage your plant tents and grow rooms from anywhere in the world.',
+    viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
 }
 
 interface RootLayoutProps {

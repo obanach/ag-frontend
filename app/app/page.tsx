@@ -14,7 +14,7 @@ export default function App() {
     const [hubs, setHubs] = React.useState([]);
     const [loading, setLoading] = useState<boolean>(true)
 
-    useEffect(() => {
+    const load = () => {
         ag.makeGet('/app/hub/', [], (response) => {
             setHubs(response);
             setLoading(false);
@@ -24,6 +24,14 @@ export default function App() {
                 description: error
             });
         })
+    }
+
+    const handleHubDeleted = (hub: HubType) => {
+        setHubs(hubs.filter((h: HubType) => h.id !== hub.id));
+    }
+
+    useEffect(() => {
+        load();
     }, []);
 
     if (loading) {
@@ -49,8 +57,8 @@ export default function App() {
                                 <div className="col-span-1" key={hub.id}>
                                     {
                                         hub.pairCode == null
-                                            ? <HubCard id={hub.id} name={hub.name} modules={hub.modulesCount}/>
-                                            : <HubCardPair id={hub.id} name={hub.name} pairCode={hub.pairCode}/>
+                                            ? <HubCard hub={hub} onHubDeleted={handleHubDeleted}/>
+                                            : <HubCardPair hub={hub} onHubDeleted={handleHubDeleted}/>
                                     }
                                 </div>
                             ))

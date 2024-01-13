@@ -4,6 +4,8 @@ interface HubType {
     modulesCount: number,
     pairCode: number | null,
     pingAt: Date | null,
+    createdAt: Date,
+    updatedAt: Date | null
 }
 
 export type { HubType }
