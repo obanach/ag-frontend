@@ -1,14 +1,6 @@
 "use client";
 import {createContext, ReactNode} from "react";
-import {
-    ApiErrorCallbackType, ApiSuccessCallbackType,
-    AuthValuesType,
-    AutogrowApiType,
-    CallbackType,
-    LoginParams,
-    RegisterParams,
-    UserDataType
-} from "@/context/types";
+import {ApiErrorCallbackType, ApiSuccessCallbackType, AutogrowApiType} from "@/context/types";
 import {authConfig} from "@/config/auth";
 import axios from "axios";
 import {useAuth} from "@/hooks/useAuth";
@@ -28,19 +20,21 @@ type Props = {
     children: ReactNode
 }
 
-const AutoGrowApiProvider = ({ children }: Props) => {
+const AutoGrowApiProvider = ({children}: Props) => {
 
     const auth = useAuth();
     const router = useRouter();
 
 
-    async function handleRequest(method: 'get' | 'post' | 'put' | 'delete', url: string, params: object = {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        await axios[method](authConfig.domain + url, {
+    async function handleRequest(method: 'GET' | "POST" | "PUT" | "DELETE", url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
+        await axios({
+            method: method,
+            url: authConfig.domain + url,
             headers: {
                 Authorization: 'Bearer ' + auth.getToken()
             },
-            params: method === 'get' || method === 'delete' ? params : undefined,
-            data: method === 'post' || method === 'put' ? params : undefined
+            data: method !== 'GET' ? params : null,
+            params: method === 'GET' ? params : null,
         })
             .then(async response => {
                 if (success) {
@@ -70,14 +64,14 @@ const AutoGrowApiProvider = ({ children }: Props) => {
     }
 
     const values = {
-        makeGet: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('get', url, params, success, error),
-        makePost: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('post', url, params, success, error),
-        makePut: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('put', url, params, success, error),
-        makeDelete: (url: string, params: [], success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('delete', url, params, success, error),
+        makeGet: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('GET', url, params, success, error),
+        makePost: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('POST', url, params, success, error),
+        makePut: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('PUT', url, params, success, error),
+        makeDelete: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('DELETE', url, params, success, error),
     }
 
     return <AutoGrowApiContext.Provider value={values}>{children}</AutoGrowApiContext.Provider>
 }
 
 
-export { AutoGrowApiContext, AutoGrowApiProvider }
+export {AutoGrowApiContext, AutoGrowApiProvider}
