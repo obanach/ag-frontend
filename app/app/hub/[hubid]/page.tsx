@@ -7,6 +7,7 @@ import {PageHeader, PageHeaderDescription, PageSubHeaderHeading} from "@/compone
 import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
+import AddModule from "@/app/app/hub/[hubid]/components/AddModule";
 
 interface props {
     params: { hubid: number }
@@ -28,7 +29,7 @@ function HubPage({params}: props) {
         <div>
             <PageHeader>
                 <HubNavigation hubid={params.hubid}/>
-                <Button variant={'outline'}><Plus className={'w-4 h-4 mr-2'}/>Add module</Button>
+                <AddModule />
             </PageHeader>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div className="row-span-1 md:row-span-3"><EnvironmentModule name={'Środowisko'}/></div>

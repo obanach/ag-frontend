@@ -6,6 +6,7 @@ import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
 import {HubType} from "@/app/app/type";
 import {notFound, useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
+import DeleteHub from "@/app/app/components/DeleteHub";
 
 interface props {
     children: ReactNode,
@@ -36,6 +37,7 @@ function HubLayout({children, params}: props) {
                     <PageHeaderHeading>
                         <span className={'text-muted'}>#</span>{hub.name}
                     </PageHeaderHeading>
+                    <DeleteHub hub={hub}/>
                 </PageHeader>
                 <div>
                     {children}
