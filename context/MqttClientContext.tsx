@@ -1,77 +1,86 @@
 "use client";
-import {createContext, ReactNode} from "react";
-import {ApiErrorCallbackType, ApiSuccessCallbackType, AutogrowApiType} from "@/context/types";
-import {authConfig} from "@/config/auth";
-import axios from "axios";
-import {useAuth} from "@/hooks/useAuth";
-import {useRouter} from "next/navigation";
+import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import mqtt from 'mqtt';
+import {toast} from "@/components/ui/use-toast";
 
+const MqttClientContext = createContext<{
+    client: mqtt.MqttClient | null;
+    onMessage: (handler: (topic: string, data: any) => void) => void;
+}>({
+    client: null,
+    onMessage: () => {}
+});
 
-const defaultProvider: AutogrowApiType = {
-    makeGet: () => Promise.resolve(),
-    makePost: () => Promise.resolve(),
-    makePut: () => Promise.resolve(),
-    makeDelete: () => Promise.resolve(),
+interface MqttClientProviderProps {
+    children: ReactNode;
+    hubId: number;
+    mqttCredentials: {
+        username: string;
+        password: string;
+    };
 }
 
-const AutoGrowApiContext = createContext(defaultProvider)
+const MqttClientProvider: React.FC<MqttClientProviderProps> = ({ children, hubId, mqttCredentials }) => {
+    const [client, setClient] = useState<mqtt.MqttClient | null>(null);
+    const [messageHandler, setMessageHandler] = useState<(topic: string, data: any) => void>(() => () => {});
 
-type Props = {
-    children: ReactNode
-}
+    const handleIncomingMessage = useCallback((topic: string, message: Buffer) => {
+        try {
+            const data = JSON.parse(message.toString());
+            const trimmedTopic = topic.replace(`hub/${hubId}/`, ''); // Remove 'hub/{hubId}/' from the topic
 
-const AutoGrowApiProvider = ({children}: Props) => {
-
-    const auth = useAuth();
-    const router = useRouter();
-
-
-    async function handleRequest(method: 'GET' | "POST" | "PUT" | "DELETE", url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) {
-        await axios({
-            method: method,
-            url: authConfig.domain + url,
-            headers: {
-                Authorization: 'Bearer ' + auth.getToken()
-            },
-            data: method !== 'GET' ? params : null,
-            params: method === 'GET' ? params : null,
-        })
-            .then(async response => {
-                if (success) {
-                    success(response.data)
-                }
+            console.log('New message from topic:', trimmedTopic, data);
+            toast({
+                title: trimmedTopic,
+                description: message.toString(),
+                duration: 5000,
             })
-            .catch((reason) => {
-                let message = 'Server error while fetching data.'
 
-                if (reason.response.status === 400) {
-                    message = reason.response.data.message;
-                }
+            messageHandler(trimmedTopic, data);
+        } catch (error) {
+            console.error('Error parsing message:', error);
+        }
+    }, [hubId, messageHandler]);
 
-                if (reason.response.status === 401) {
-                    auth.logout()
-                    router.push('/auth/login')
-                }
+    useEffect(() => {
+        const mqttBrokerUrl = 'ws://mqtt.autogrow.pl:8083/mqtt';
+        const mqttOptions: mqtt.IClientOptions = {
+            username: mqttCredentials.username,
+            password: mqttCredentials.password,
+            clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
+            reconnectPeriod: 1000
+        };
+        const mqttClient = mqtt.connect(mqttBrokerUrl, mqttOptions);
 
-                if (reason.response.status === 403) {
-                    message = 'You are not authorized to access this resource.'
-                }
+        console.log('mqttClient', mqttClient)
 
-                if (error) {
-                    error(message)
-                }
-            })
-    }
+        mqttClient.on('connect', () => {
+            console.log('Connected to MQTT Broker');
+            mqttClient.subscribe(`hub/${hubId}/#`);
+        });
 
-    const values = {
-        makeGet: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('GET', url, params, success, error),
-        makePost: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('POST', url, params, success, error),
-        makePut: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('PUT', url, params, success, error),
-        makeDelete: (url: string, params: {}, success?: ApiSuccessCallbackType, error?: ApiErrorCallbackType) => handleRequest('DELETE', url, params, success, error),
-    }
+        mqttClient.on('message', handleIncomingMessage);
 
-    return <AutoGrowApiContext.Provider value={values}>{children}</AutoGrowApiContext.Provider>
-}
+        mqttClient.on('error', (error) => {
+            console.error('MQTT error:', error);
+        });
 
+        setClient(mqttClient);
 
-export {AutoGrowApiContext, AutoGrowApiProvider}
+        return () => {
+            mqttClient.end();
+        };
+    }, [hubId, mqttCredentials, handleIncomingMessage]);
+
+    const onMessage = (handler: (topic: string, data: any) => void) => {
+        setMessageHandler(() => handler);
+    };
+
+    return (
+        <MqttClientContext.Provider value={{ client, onMessage }}>
+            {children}
+        </MqttClientContext.Provider>
+    );
+};
+
+export { MqttClientContext, MqttClientProvider };

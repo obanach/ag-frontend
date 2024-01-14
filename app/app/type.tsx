@@ -7,6 +7,10 @@ interface HubType {
     createdAt: Date,
     updatedAt: Date | null
     online: boolean
+    mqtt: {
+        username: string,
+        password: string
+    }
 }
 
 interface ModuleType {
