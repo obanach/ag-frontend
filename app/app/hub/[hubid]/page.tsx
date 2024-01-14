@@ -2,9 +2,16 @@
 import {FanModule, FanModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/fan";
 import {LightModule, LightModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/light";
 import {EnvironmentModule, EnvironmentModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/environment";
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
+import {PageHeader, PageHeaderDescription, PageSubHeaderHeading} from "@/components/page-header";
+import {Button} from "@/components/ui/button";
+import {Plus} from "lucide-react";
+import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
 
-function HubPage() {
+interface props {
+    params: { hubid: number }
+}
+function HubPage({params}: props) {
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
@@ -19,6 +26,10 @@ function HubPage() {
 
     return (
         <div>
+            <PageHeader>
+                <HubNavigation hubid={params.hubid}/>
+                <Button variant={'outline'}><Plus className={'w-4 h-4 mr-2'}/>Add module</Button>
+            </PageHeader>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div className="row-span-1 md:row-span-3"><EnvironmentModule name={'Środowisko'}/></div>
                 <div className="row-span-1"><LightModule name={'First Light'}/></div>

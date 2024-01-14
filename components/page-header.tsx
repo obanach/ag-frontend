@@ -10,7 +10,7 @@ function PageHeader({
   return (
     <section
       className={cn(
-        "flex max-w-[980px] flex-col items-start gap-2 px-4 pt-8 md:pt-12",
+        "flex w-full items-center justify-between mb-5",
         className
       )}
       {...props}
@@ -50,4 +50,20 @@ function PageHeaderDescription({
   )
 }
 
-export { PageHeader, PageHeaderHeading, PageHeaderDescription }
+
+function PageSubHeaderHeading({
+                             className,
+                             ...props
+                           }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+      <h1
+          className={cn(
+              "text-xl font-bold leading-tight text-muted-foreground tracking-tighter md:text-3xl lg:leading-[1.1]",
+              className
+          )}
+          {...props}
+      />
+  )
+}
+
+export { PageHeader, PageHeaderHeading, PageHeaderDescription, PageSubHeaderHeading }

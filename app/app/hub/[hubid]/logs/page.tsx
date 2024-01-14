@@ -2,7 +2,11 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {LogTable, LogTableSkeleton} from "@/app/app/hub/[hubid]/logs/components/log-table";
 import {Badge} from "@/components/ui/badge";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
+import {Button} from "@/components/ui/button";
+import {Plus} from "lucide-react";
+import {PageHeader} from "@/components/page-header";
 
 type LogType = {
     id: number
@@ -86,7 +90,10 @@ const data: LogType[] = [
     }
 ];
 
-function HubLogsPage() {
+interface props {
+    params: { hubid: number }
+}
+function HubLogsPage({params}: props) {
 
     const [loading, setLoading] = useState<boolean>(true)
 
@@ -102,6 +109,9 @@ function HubLogsPage() {
 
     return (
         <div>
+            <PageHeader>
+                <HubNavigation hubid={params.hubid}/>
+            </PageHeader>
             <LogTable columns={columns} data={data}/>
         </div>
     );

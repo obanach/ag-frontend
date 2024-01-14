@@ -1,7 +1,11 @@
 "use client";
-import {ReactNode} from "react";
-import {PageHeaderHeading} from "@/components/page-header";
+import React, {ReactNode, useEffect, useState} from "react";
+import {PageHeader, PageHeaderHeading} from "@/components/page-header";
 import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
+import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
+import {HubType} from "@/app/app/type";
+import {notFound, useRouter} from "next/navigation";
+import {Button} from "@/components/ui/button";
 
 interface props {
     children: ReactNode,
@@ -10,21 +14,35 @@ interface props {
 
 function HubLayout({children, params}: props) {
 
-    //TODO: Check if hub exists and get hub name
+    const ag = useAutoGrowApi();
+    const router = useRouter();
+    const [hub, setHub] = useState<HubType | null>(null);
 
-    return (
-        <section>
-            <div className={'pb-5'}>
-                <PageHeaderHeading>
-                    My first Hub
-                </PageHeaderHeading>
-            </div>
-            <HubNavigation hubid={params.hubid} classname={'pb-5'}/>
-            <div>
-                {children}
-            </div>
-        </section>
-    )
+    useEffect(() => {
+        ag.makeGet('/app/hub/' + params.hubid, [], (response) => {
+            if (response.pairCode !== null) {
+                return router.push('/404');
+            }
+            setHub(response);
+        }, (error) => {
+            return router.push('/404');
+        })
+    }, []);
+
+    if (hub) {
+        return (
+            <section>
+                <PageHeader>
+                    <PageHeaderHeading>
+                        <span className={'text-muted'}>#</span>{hub.name}
+                    </PageHeaderHeading>
+                </PageHeader>
+                <div>
+                    {children}
+                </div>
+            </section>
+        )
+    }
 }
 
 export default HubLayout;

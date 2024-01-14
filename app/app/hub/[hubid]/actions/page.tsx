@@ -1,9 +1,15 @@
 "use client";
 
 import {SwitchAction, SwitchActionSkeleton} from "@/app/app/hub/[hubid]/actions/components/switch";
-import {useEffect, useState} from "react";
-
-function HubActionsPage() {
+import React, {useEffect, useState} from "react";
+import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
+import {Button} from "@/components/ui/button";
+import {Plus} from "lucide-react";
+import {PageHeader} from "@/components/page-header";
+interface props {
+    params: { hubid: number }
+}
+function HubActionsPage({params}: props) {
 
     const [loading, setLoading] = useState<boolean>(true)
 
@@ -19,6 +25,9 @@ function HubActionsPage() {
 
     return (
         <div>
+            <PageHeader>
+                <HubNavigation hubid={params.hubid}/>
+            </PageHeader>
             <SwitchAction name={'Fan in'}/>
         </div>
     );

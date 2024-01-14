@@ -6,6 +6,8 @@ import {HubType} from "@/app/app/type";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useAutoGrowApi} from "@/hooks/useAutoGrowApi";
 import {toast} from "@/components/ui/use-toast";
+import {PageHeader, PageHeaderHeading} from "@/components/page-header";
+import {ChevronLeft} from "lucide-react";
 
 export default function App() {
 
@@ -49,12 +51,13 @@ export default function App() {
 
     return (
         <div>
-            <div className={'mb-5 flex items-center'}>
-                <h2 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] mr-auto">
+            <PageHeader>
+                <PageHeaderHeading>
                     List of hubs
-                </h2>
+                </PageHeaderHeading>
                 <CreateNewHub onHubCreated={handleHubCreated}/>
-            </div>
+            </PageHeader>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {
                     loading
