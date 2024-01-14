@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type {Metadata, Viewport} from 'next'
 import { Inter as FontSans } from "next/font/google"
 import './globals.css'
 import {ReactNode} from "react";
@@ -16,8 +16,16 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
     title: 'AutoGrow',
     description: 'AutoGrow App allows you to manage your plant tents and grow rooms from anywhere in the world.',
-    viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
 }
+
+export const viewport: Viewport = {
+    width: "device-width",
+    height: "device-height",
+    initialScale: 1,
+    viewportFit: "cover",
+    themeColor: 'dark',
+    userScalable: false
+};
 
 interface RootLayoutProps {
   children: ReactNode

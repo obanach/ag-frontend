@@ -38,6 +38,7 @@ export default function App() {
         setHubs(hubs.map((h: HubType) => h.id === hub.id ? hub : h));
     }
 
+    // @ts-ignore
     useEffect(() => {
         load();
     }, []);

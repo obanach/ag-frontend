@@ -63,7 +63,7 @@ const CreateNewHub: React.FC<Props> = ({onHubCreated}: Props) => {
             })
         })
     }
-
+    // @ts-ignore
     React.useEffect(() => {
         if (hub && hub.pairCode) {
             const interval = setInterval(() => {
