@@ -35,25 +35,22 @@ const MqttClientProvider: React.FC<MqttClientProviderProps> = ({ children, hubId
                 description: message.toString(),
                 duration: 5000,
             })
-
             messageHandler(trimmedTopic, data);
         } catch (error) {
             console.error('Error parsing message:', error);
         }
-    }, [hubId, messageHandler]);
+    }, []);
 
     useEffect(() => {
-        const mqttBrokerUrl = 'wss://mqtt.autogrow.pl:8880/mqtt';
+        const mqttBrokerUrl = 'wss://mqtt.autogrow.pl:8084/mqtt';
         const mqttOptions: mqtt.IClientOptions = {
             username: mqttCredentials.username,
             password: mqttCredentials.password,
             clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
             reconnectPeriod: 1000,
+            protocolVersion: 5
         };
         const mqttClient = mqtt.connect(mqttBrokerUrl, mqttOptions);
-
-        console.log('mqttClient', mqttClient)
-
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT Broker');
             mqttClient.subscribe(`hub/${hubId}/#`);
