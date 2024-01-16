@@ -43,12 +43,12 @@ const MqttClientProvider: React.FC<MqttClientProviderProps> = ({ children, hubId
     }, [hubId, messageHandler]);
 
     useEffect(() => {
-        const mqttBrokerUrl = 'ws://mqtt.autogrow.pl:8083/mqtt';
+        const mqttBrokerUrl = 'wss://mqtt.autogrow.pl:8880/mqtt';
         const mqttOptions: mqtt.IClientOptions = {
             username: mqttCredentials.username,
             password: mqttCredentials.password,
             clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
-            reconnectPeriod: 1000
+            reconnectPeriod: 1000,
         };
         const mqttClient = mqtt.connect(mqttBrokerUrl, mqttOptions);
 
