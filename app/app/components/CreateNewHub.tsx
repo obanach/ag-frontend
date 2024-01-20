@@ -74,11 +74,11 @@ const CreateNewHub: React.FC<Props> = ({onHubCreated}: Props) => {
     }, [hub]);
 
     const handleContinue = () => {
-        setLoading(true);
         if (hubName.length < 1) {
             setError('Please enter a hub name');
             return;
         }
+        setLoading(true);
         ag.makePost('/app/hub/', {name: hubName}, (response) => {
             setLoading(false);
             setHub(response)

@@ -9,6 +9,7 @@ import {Button} from "@/components/ui/button";
 import DeleteHub from "@/app/app/components/DeleteHub";
 import {MqttClientProvider} from "@/context/MqttClientContext";
 import {Badge} from "@/components/ui/badge";
+import {Spinner} from "@/components/spinner";
 
 interface props {
     children: ReactNode,
@@ -20,17 +21,23 @@ function HubLayout({children, params}: props) {
     const ag = useAutoGrowApi();
     const router = useRouter();
     const [hub, setHub] = useState<HubType | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         ag.makeGet('/app/hub/' + params.hubid, [], (response) => {
             if (response.pairCode !== null) {
-                return router.push('/404');
+                return router.push('/app/hub');
             }
             setHub(response);
+            setIsLoading(false);
         }, (error) => {
-            return router.push('/404');
+            return router.push('/app/hub');
         })
     }, []);
+
+    if (isLoading) {
+        return <Spinner/>
+    }
 
     if (hub) {
         return (

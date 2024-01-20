@@ -17,7 +17,6 @@ interface ModuleType {
     id: number,
     type: 'environment' | 'switch',
     name: string,
-    hubId: number,
     createdAt: Date,
     updatedAt: Date | null
 }

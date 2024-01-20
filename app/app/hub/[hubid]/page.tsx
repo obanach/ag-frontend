@@ -2,24 +2,40 @@
 import {FanModule, FanModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/fan";
 import {LightModule, LightModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/light";
 import {EnvironmentModule, EnvironmentModuleSkeleton} from "@/app/app/hub/[hubid]/components/module/environment";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useState} from "react";
 import {PageHeader, PageHeaderDescription, PageSubHeaderHeading} from "@/components/page-header";
 import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import HubNavigation from "@/app/app/hub/[hubid]/components/navigation";
 import AddModule from "@/app/app/hub/[hubid]/components/AddModule";
+import {userMqttClient} from "@/hooks/userMqttClient";
 
 interface props {
     params: { hubid: number }
 }
 function HubPage({params}: props) {
     const [loading, setLoading] = useState<boolean>(true)
+    const mqttClient = userMqttClient();
+
+    const handleMessage = useCallback((topic: string, message: []) => {
+        console.log(`Received message on topic ${topic}: ${message.toString()}`);
+    }, []);
+
+    // mqttClient.onMessage('#', (data) => {
+    //     console.log('New incoming data:')
+    //     console.log(data)
+    // });
 
     useEffect(() => {
         setTimeout(() => {
             setLoading(false)
         }, 1000)
     }, []);
+
+
+    const handleOnModulePaired = () => {
+        console.log('Module paired');
+    }
 
     if (loading) {
         return <HubPageSkeleton/>
@@ -29,7 +45,7 @@ function HubPage({params}: props) {
         <div>
             <PageHeader>
                 <HubNavigation hubid={params.hubid}/>
-                <AddModule />
+                <AddModule onModulePaired={handleOnModulePaired} />
             </PageHeader>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div className="row-span-1 md:row-span-3"><EnvironmentModule name={'Środowisko'}/></div>
