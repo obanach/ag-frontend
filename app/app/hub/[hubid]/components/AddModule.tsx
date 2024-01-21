@@ -168,7 +168,7 @@ const AddModule: React.FC<Props> = ({onModulePaired}: Props) => {
                                     )
                                 ) : (
                                     modules.length === 0 ? (
-                                        <Alert variant={'destructive'}>
+                                        <Alert>
                                             <RadioTower className="h-4 w-4" />
                                             <AlertTitle>No modules found</AlertTitle>
                                             <AlertDescription>

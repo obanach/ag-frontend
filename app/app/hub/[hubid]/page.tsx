@@ -66,10 +66,10 @@ function HubPage({params}: props) {
                             {
                                 modules.map((module) => {
                                     if (module.type === 'environment') {
-                                        return <div className="row-span-1 md:row-span-3" key={module.id}><EnvironmentModule key={module.id} name={module.name} data={module.data}/></div>
+                                        return <div className="row-span-1 md:row-span-3" key={module.id}><EnvironmentModule key={module.id} name={module.name} data={module.data} moduleId={module.id} hubId={params.hubid}/></div>
                                     }
                                     if (module.type === 'switch') {
-                                        return <div className="row-span-1" key={module.id}><SwitchModule name={module.name}/></div>
+                                        return <div className="row-span-1" key={module.id}><SwitchModule name={module.name} moduleId={module.id} hubId={params.hubid}/></div>
                                     }
                                     return null;
                                 })

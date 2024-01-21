@@ -10,20 +10,16 @@ import {Separator} from "@/components/ui/separator";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Button} from "@/components/ui/button";
-
-const data = Array.from({length: 15}, () => ({
-    temperature: Math.floor(Math.random() * (23 - 18 + 1)) + 18,
-    humidity: Math.floor(Math.random() * (40 - 30 + 1)) + 75,
-    dirt: Math.floor(Math.random() * (33 - 30 + 1)) + 46,
-    createdAt: new Date().getTime(),
-}));
+import DeleteModule from "@/app/app/hub/[hubid]/components/module/Delete";
 
 interface Props {
+    hubId: number,
+    moduleId: number,
     name: string,
     data: any[]
 }
 
-const EnvironmentModule: React.FC<Props> = ({name, data}: Props) => {
+const EnvironmentModule: React.FC<Props> = ({hubId, moduleId, name , data}: Props) => {
 
     const {theme: mode} = useTheme()
     const theme = themes.find((theme) => theme.name === 'zinc')
@@ -49,7 +45,7 @@ const EnvironmentModule: React.FC<Props> = ({name, data}: Props) => {
     useEffect(() => {
         if (data.length > 0) {
             setHumidity(data[data.length - 1].humidity)
-            setDirt(data[data.length - 1].dirt)
+            setDirt(Math.round(data[data.length - 1].dirt));
             setTemperature(data[data.length - 1].temperature)
             setBattery(Math.round(data[data.length - 1].battery));
         }
@@ -101,9 +97,8 @@ const EnvironmentModule: React.FC<Props> = ({name, data}: Props) => {
                     </div>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="hidden md:block">
+            <CardContent className="hidden md:block pb-5">
                 <div className="h-80">
-
                     {(data.length === 0) ? (
                         <div className={'flex items-center justify-center h-full'}><p className={'text-muted-foreground'}>No data received yet.</p></div>) : (
                         <ResponsiveContainer width="100%" height="100%">
@@ -216,6 +211,9 @@ const EnvironmentModule: React.FC<Props> = ({name, data}: Props) => {
 
                 </div>
             </CardContent>
+            <div className={'px-5 pb-5 flex justify-end'}>
+                <DeleteModule hubId={hubId} moduleId={moduleId} name={name} />
+            </div>
         </Card>
     )
 }

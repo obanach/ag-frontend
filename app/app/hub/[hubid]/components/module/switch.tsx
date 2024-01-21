@@ -5,12 +5,15 @@ import * as React from "react";
 import {FanIcon, ToggleLeft} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
+import Delete from "@/app/app/hub/[hubid]/components/module/Delete";
 
 interface Props {
-    name: string | null
+    hubId: number,
+    moduleId: number,
+    name: string
 }
 
-const SwitchModule: React.FC<Props> = ({name}: Props) => {
+const SwitchModule: React.FC<Props> = ({name, moduleId, hubId}: Props) => {
     return (
         <Card className={'w-full h-full flex items-center'}>
             <div className="flex w-full justify-between p-5">
@@ -30,6 +33,7 @@ const SwitchModule: React.FC<Props> = ({name}: Props) => {
                 </div>
                 <div className="flex items-center justify-center gap-3">
                     <Switch id="airplane-mode"/>
+                    <Delete hubId={hubId} moduleId={moduleId} name={name} />
                 </div>
             </div>
         </Card>

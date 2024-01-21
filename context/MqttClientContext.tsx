@@ -50,14 +50,14 @@ const MqttClientProvider: React.FC<MqttClientProviderProps> = ({ children, hubId
         mqttClient.on('message', (topic, message) => {
             try {
                 const data = JSON.parse(message.toString());
-                const trimmedTopic = topic.replace(`hub/${hubId}`, ''); // Remove 'hub/{hubId}/' from the topic
+                const trimmedTopic = topic.replace(`hub/${hubId}`, '');
 
-                console.log('New message from topic:', trimmedTopic, data);
-                toast({
-                    title: trimmedTopic,
-                    description: message.toString(),
-                    duration: 5000,
-                })
+                // console.log('New message from topic:', trimmedTopic, data);
+                // toast({
+                //     title: trimmedTopic,
+                //     description: message.toString(),
+                //     duration: 5000,
+                // })
             } catch (error) {
                 console.error('Error parsing message:', error);
             }
