@@ -50,43 +50,38 @@ const AddModule: React.FC<Props> = ({onModulePaired}: Props) => {
         pairingRef.current = pairing;
     }, [pairing]);
 
-    useEffect(() => {
+    mqttClient.onMessage('/module/discover', (data) => {
+        if (!data.modules) {
+            console.warn('MQTT: Invalid discover response');
+        }
 
-        mqttClient.onMessage('/module/discover', (data) => {
-
-            if (!data.modules) {
-                console.warn('MQTT: Invalid discover response');
+        const modules = data.modules.map((module: any) => {
+            return {
+                type: module.type,
+                macAddress: module.macAddress
             }
+        })
+        setModules(modules);
+        setLoading(false);
+    });
 
-            const modules = data.modules.map((module: any) => {
-                return {
-                    type: module.type,
-                    macAddress: module.macAddress
-                }
-            })
-            setModules(modules);
-            setLoading(false);
-        });
+    mqttClient.onMessage('/module/pair', (data) => {
 
-        mqttClient.onMessage('/module/pair', (data) => {
+        if (!data.paired || !data.id || !data.macAddress) {
+            console.warn('MQTT: Invalid discover response');
+        }
 
-            if (!data.paired || !data.id || !data.macAddress) {
-                console.warn('MQTT: Invalid discover response');
-            }
+        if (data.paired === false) {
+            onPairingError('Pairing failed');
+            return;
+        }
 
-            if (data.paired === false) {
-                onPairingError('Pairing failed');
-                return;
-            }
+        if (data.paired === true) {
+            onPairingSuccess();
+            return;
+        }
 
-            if (data.paired === true) {
-                onPairingSuccess();
-                return;
-            }
-
-        });
-
-    }, []);
+    });
 
 
     const pairModule = () => {

@@ -78,6 +78,8 @@ const MqttClientProvider: React.FC<MqttClientProviderProps> = ({ children, hubId
             const trimmedTopic = incomingTopic.replace(`hub/${hubId}`, '');
             const data = JSON.parse(message.toString());
 
+            console.log(data);
+
             if (trimmedTopic !== topic) {
                 if (topic !== '#') {
                     return;
