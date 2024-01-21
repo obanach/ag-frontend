@@ -1,7 +1,7 @@
 "use client"
 import {useTheme} from "next-themes"
-import React from 'react';
-import {Line, LineChart, ResponsiveContainer, Tooltip} from "recharts"
+import React, {useEffect} from 'react';
+import {Line, LineChart, ResponsiveContainer, Tooltip, YAxis} from "recharts"
 import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
 import {themes} from "@/config/themes";
 import {BatteryFullIcon, ThermometerIcon} from "lucide-react";
@@ -9,21 +9,53 @@ import {CircleIcon} from "@radix-ui/react-icons";
 import {Separator} from "@/components/ui/separator";
 import ModuleTitle from "@/app/app/hub/[hubid]/components/module/title";
 import {Skeleton} from "@/components/ui/skeleton";
+import {Button} from "@/components/ui/button";
 
 const data = Array.from({length: 15}, () => ({
     temperature: Math.floor(Math.random() * (23 - 18 + 1)) + 18,
     humidity: Math.floor(Math.random() * (40 - 30 + 1)) + 75,
     dirt: Math.floor(Math.random() * (33 - 30 + 1)) + 46,
+    createdAt: new Date().getTime(),
 }));
 
 interface Props {
-    name: string
+    name: string,
+    data: any[]
 }
 
-const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
+const EnvironmentModule: React.FC<Props> = ({name, data}: Props) => {
 
     const {theme: mode} = useTheme()
     const theme = themes.find((theme) => theme.name === 'zinc')
+    const [humidity, setHumidity] = React.useState<number>(0)
+    const [dirt, setDirt] = React.useState<number>(0)
+    const [temperature, setTemperature] = React.useState<number>(0)
+    const [battery, setBattery] = React.useState<number>(0)
+
+    data = data.map((item) => {
+        return {
+            ...item,
+            createdAt: new Date(item.createdAt).toLocaleString(navigator.language, {
+                day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+            })
+        }
+    })
+
+    useEffect(() => {
+        if (data.length > 0) {
+            setHumidity(data[data.length - 1].humidity)
+            setDirt(data[data.length - 1].dirt)
+            setTemperature(data[data.length - 1].temperature)
+            setBattery(Math.round(data[data.length - 1].battery));
+        }
+    }, [data])
+
+
 
     return (
         <Card className={'w-full h-full'}>
@@ -43,7 +75,7 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
                                     </div>
                                     <div className="flex items-center">
                                         <BatteryFullIcon className="mr-1 h-3 w-3"/>
-                                        50%
+                                        {battery}%
                                     </div>
                                 </div>
                             </div>
@@ -52,17 +84,17 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
                             <div className="flex items-center space-x-2 md:space-x-4">
                                 <div>
                                     <p className="text-[0.60rem] md:text-sm uppercase text-muted-foreground">Hum.</p>
-                                    <p className="text-sm md:text-2xl font-bold">86%</p>
+                                    <p className="text-sm md:text-2xl font-bold">{humidity}%</p>
                                 </div>
                                 <Separator orientation="vertical" className="h-8"/>
                                 <div>
                                     <p className="text-[0.60rem] md:text-sm uppercase text-muted-foreground">Dirt</p>
-                                    <p className="text-sm md:text-2xl font-bold">33%</p>
+                                    <p className="text-sm md:text-2xl font-bold">{dirt}%</p>
                                 </div>
                                 <Separator orientation="vertical" className="h-8"/>
                                 <div>
                                     <p className="text-[0.60rem] md:text-sm uppercase text-muted-foreground">Temp.</p>
-                                    <p className="text-sm md:text-2xl font-bold">23°C</p>
+                                    <p className="text-sm md:text-2xl font-bold">{temperature}°C</p>
                                 </div>
                             </div>
                         </div>
@@ -71,109 +103,117 @@ const EnvironmentModule: React.FC<Props> = ({name}: Props) => {
             </CardHeader>
             <CardContent className="hidden md:block">
                 <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 10,
-                                left: 10,
-                                bottom: 0,
-                            }}
-                        >
-                            <Tooltip
-                                content={({active, payload}) => {
-                                    if (active && payload && payload.length) {
-                                        return (
-                                            <div className="rounded-lg border bg-background p-2 shadow-sm">
-                                                <div className="grid grid-cols-3 gap-3">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
+
+                    {(data.length === 0) ? (
+                        <div className={'flex items-center justify-center h-full'}><p className={'text-muted-foreground'}>No data received yet.</p></div>) : (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart
+                                data={data}
+                                margin={{
+                                    top: 5,
+                                    right: 10,
+                                    left: 10,
+                                    bottom: 0,
+                                }}
+                            >
+                                <YAxis domain={[0, 100]} hide={true} dataKey="temperature"/>
+                                <Tooltip
+                                    content={({active, payload}) => {
+                                        if (active && payload && payload.length) {
+                                            return (
+                                                <div className="rounded-lg border bg-background p-2 shadow-sm">
+                                                    <div className="grid grid-cols-3 gap-3">
+                                                        <div className="flex flex-col">
+                                                        <span
+                                                            className="text-[0.70rem] uppercase text-muted-foreground">
                                                           Hum.
                                                         </span>
-                                                        <span className="font-bold">
-                                                          {payload[1].value}%
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                                          Dirt
-                                                        </span>
-                                                        <span className="font-bold">
+                                                            <span className="font-bold text-muted-foreground">
                                                           {payload[2].value}%
                                                         </span>
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                                              Dirt
+                                                            </span>
+                                                            <span className="font-bold text-muted-foreground">
+                                                              {payload[1].value}%
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                        <span
+                                                            className="text-[0.70rem] uppercase text-muted-foreground">
                                                           Temp.
                                                         </span>
-                                                        <span className="font-bold text-muted-foreground">
+                                                            <span className="font-bold text-muted-foreground">
                                                             {payload[0].value} °C
                                                         </span>
+                                                        </div>
                                                     </div>
+                                                    <p className={'text-[0.70rem] text-muted-foreground mt-2 text-center'}>{payload[0].payload.createdAt}</p>
                                                 </div>
-                                            </div>
-                                        )
-                                    }
+                                            )
+                                        }
 
-                                    return null
-                                }}
-                            />
-                            <Line
-                                type="monotone"
-                                strokeWidth={2}
-                                dataKey="temperature"
-                                activeDot={{
-                                    r: 6,
-                                    style: {fill: "var(--theme-primary)", opacity: 0.25},
-                                }}
-                                style={
-                                    {
-                                        stroke: "var(--theme-primary)",
-                                        opacity: 0.25,
-                                        "--theme-primary": `hsl(${
-                                            theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
-                                        })`,
-                                    } as React.CSSProperties
-                                }
-                            />
-                            <Line
-                                type="monotone"
-                                strokeWidth={2}
-                                dataKey="dirt"
-                                activeDot={{
-                                    r: 6,
-                                    style: {fill: "var(--theme-primary)", opacity: 0.45},
-                                }}
-                                style={
-                                    {
-                                        stroke: "var(--theme-primary)",
-                                        opacity: 0.45,
-                                        "--theme-primary": `hsl(${
-                                            theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
-                                        })`,
-                                    } as React.CSSProperties
-                                }
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="humidity"
-                                strokeWidth={2}
-                                activeDot={{
-                                    r: 8,
-                                    style: {fill: "var(--theme-primary)"},
-                                }}
-                                style={
-                                    {
-                                        stroke: "var(--theme-primary)",
-                                        "--theme-primary": `hsl(${
-                                            theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
-                                        })`,
-                                    } as React.CSSProperties
-                                }
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
+                                        return null
+                                    }}
+                                />
+                                <Line
+                                    type="monotone"
+                                    strokeWidth={2}
+                                    dataKey="temperature"
+                                    activeDot={{
+                                        r: 6,
+                                        style: {fill: "var(--theme-primary)", opacity: 0.25},
+                                    }}
+                                    style={
+                                        {
+                                            stroke: "var(--theme-primary)",
+                                            opacity: 0.20,
+                                            "--theme-primary": `hsl(${
+                                                theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
+                                            })`,
+                                        } as React.CSSProperties
+                                    }
+                                />
+                                <Line
+                                    type="monotone"
+                                    strokeWidth={2}
+                                    dataKey="dirt"
+                                    activeDot={{
+                                        r: 6,
+                                        style: {fill: "var(--theme-primary)", opacity: 0.45},
+                                    }}
+                                    style={
+                                        {
+                                            stroke: "var(--theme-primary)",
+                                            opacity: 0.55,
+                                            "--theme-primary": `hsl(${
+                                                theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
+                                            })`,
+                                        } as React.CSSProperties
+                                    }
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="humidity"
+                                    strokeWidth={2}
+                                    activeDot={{
+                                        r: 8,
+                                        style: {fill: "var(--theme-primary)"},
+                                    }}
+                                    style={
+                                        {
+                                            stroke: "var(--theme-primary)",
+                                            "--theme-primary": `hsl(${
+                                                theme?.cssVars[mode === "dark" ? "dark" : "light"].primary
+                                            })`,
+                                        } as React.CSSProperties
+                                    }
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>)}
+
                 </div>
             </CardContent>
         </Card>
