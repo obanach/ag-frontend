@@ -25,12 +25,19 @@ function HubPage({params}: props) {
         loadModules();
     }, []);
 
+    // add timeout that will reload modules every 5 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            loadModules();
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     const loadModules = () => {
-        setLoading(true);
         ag.makeGet('/app/hub/' + params.hubid + '/module', [], (modules) => {
             setModules(modules);
             setLoading(false);
+            console.log('Modules loaded', modules);
         }, (error) => {
             console.log(error);
             setLoading(false);
@@ -39,7 +46,7 @@ function HubPage({params}: props) {
     }
 
     const handleOnModulePaired = () => {
-        console.log('Module paired');
+        loadModules();
     }
 
     return (
